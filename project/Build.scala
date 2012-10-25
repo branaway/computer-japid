@@ -1,0 +1,22 @@
+import sbt._
+import Keys._
+import PlayProject._
+
+object ApplicationBuild extends Build {
+
+    val appName         = "computer-database-jpa"
+    val appVersion      = "1.0"
+
+    val appDependencies = Seq(
+      "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final"
+      ,"japid42" % "japid42_2.9.1" % "0.5.1"
+    )
+
+    val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+      ebeanEnabled := false,
+      resolvers += "Local Play Repository" at "/Users/bran/projects/playscala/repository/local"
+
+    )
+
+}
+            

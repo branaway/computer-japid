@@ -1,0 +1,33 @@
+@import play.data.Form
+@import play.data.Form.Field
+@import utils.Forms;
+
+@(Form<Computer> computerForm)
+
+
+@extends main
+
+    <h1>Add a Computer/Japid</h1>
+    
+    <form method="POST" action="$routes.Application.save()">
+        <fieldset>
+            @t myInputText(computerForm.apply("name"), "Computer name")
+            @t myInputText(computerForm.apply("introduced"), "Introduced date")
+            @t myInputText(computerForm.apply("discontinued"), "Discontinued date")
+
+            @t select( \
+            	computerForm.apply("company.id"), \
+                Company.options(), \
+                "Company", \
+				"- Choose a company -" \
+            )
+            
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this computer" class="btn primary"> or 
+            <a href="$routes.Application.list(0, "name", "desc", "")" class="btn">Cancel</a> 
+        </div>
+    </form>
+

@@ -1,0 +1,17 @@
+@import utils.Forms
+
+@(Field fld, Map<String, String> options, String label, String defaultVal)
+
+<div class="clearfix ${fld.errors() != null && fld.errors().size() > 0 ? "error" : ""}">
+    <label for="$fld.name()">$label</label>
+    <div class="input">
+        
+    <select id="$fld.name()" name="$fld.name()" >
+        <option class="blank" value="">$defaultVal</option>
+        @for(String k : options.keySet()){
+            <option value="$k" ${k.equals(fld.value()) ? "selected" : ""}>~options.get(k)</option>
+        @}
+    </select>
+	<span class="help-inline">$Forms.fieldSpecs(fld)</span> 
+    </div>
+</div>
