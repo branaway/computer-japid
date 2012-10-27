@@ -11,7 +11,7 @@ Twitter Bootstrap requires a different form layout to the default one that the P
 Bing: I have ported the app to using Japid as the rendering engine. Please see the 
 
 1. project/Build.scala
-2. app/Global.java
+2. app/Global.java: to initialize the Japid and added customized error handlers 
 3. app/controllers/Application.java and
 4. the japidroot folder
 

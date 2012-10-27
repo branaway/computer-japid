@@ -14,6 +14,8 @@
             @t myInputText(computerForm.apply("name"), "Computer name")
             @t myInputText(computerForm.apply("introduced"), "Introduced date")
             @t myInputText(computerForm.apply("discontinued"), "Discontinued date")
+            
+*{tag invocation must complete in one line. Thus we use a back-slash as the line continuator }*
 
             @t select( \
             	computerForm.apply("company.id"), \
@@ -27,7 +29,7 @@
         
         <div class="actions">
             <input type="submit" value="Create this computer" class="btn primary"> or 
-            <a href="$routes.Application.list(0, "name", "desc", "")" class="btn">Cancel</a> 
+            <a href="$routes.Application.index()" class="btn">Cancel</a> 
         </div>
     </form>
 

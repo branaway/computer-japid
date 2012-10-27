@@ -54,4 +54,8 @@ public class Forms {
 		}
 		return re;
 	}
+	
+	public static boolean hasError(Field fld) {
+		return fld.errors() != null && fld.errors().size() > 0;
+	}
 }

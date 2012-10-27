@@ -1,8 +1,7 @@
-package japidviews.Application;
+package japidviews;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
-import utils.Forms;
 import play.mvc.Http.Context.Implicit;
 import models.*;
 import play.i18n.Lang;
@@ -17,12 +16,12 @@ import java.util.*;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 //
-// NOTE: This file was generated from: japidviews/Application/myInputText.html
+// NOTE: This file was generated from: japidviews/onHandlerNotFound.html
 // Change to this file will be lost next time the template file is compiled.
 //
-public class myInputText extends cn.bran.play.JapidTemplateBase
+public class onHandlerNotFound extends cn.bran.play.JapidTemplateBase
 {
-	public static final String sourceTemplate = "japidviews/Application/myInputText.html";
+	public static final String sourceTemplate = "japidviews/onHandlerNotFound.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
 		setContentType("text/html; charset=utf-8");
@@ -41,18 +40,18 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 // - end of implicit fields with Play 
 
 
-	public myInputText() {
+	public onHandlerNotFound() {
 		super(null);
 	}
-	public myInputText(StringBuilder out) {
+	public onHandlerNotFound(StringBuilder out) {
 		super(out);
 	}
 /* based on https://github.com/branaway/Japid/issues/12
  */
-	public static final String[] argNames = new String[] {/* args of the template*/"fld", "label",  };
-	public static final String[] argTypes = new String[] {/* arg types of the template*/"Field", "String",  };
-	public static final Object[] argDefaults= new Object[] {null,null, };
-	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.Application.myInputText.class);
+	public static final String[] argNames = new String[] {/* args of the template*/"rh",  };
+	public static final String[] argTypes = new String[] {/* arg types of the template*/"play.mvc.Http.RequestHeader",  };
+	public static final Object[] argDefaults= new Object[] {null, };
+	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.onHandlerNotFound.class);
 
 	{
 		setRenderMethod(renderMethod);
@@ -63,42 +62,28 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	}
 ////// end of named args stuff
 
-	private Field fld; // line 3
-	private String label; // line 3
-	public cn.bran.japid.template.RenderResult render(Field fld,String label) {
-		this.fld = fld;
-		this.label = label;
+	private play.mvc.Http.RequestHeader rh; // line 1
+	public cn.bran.japid.template.RenderResult render(play.mvc.Http.RequestHeader rh) {
+		this.rh = rh;
 		long __t = -1;
-		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 3
+		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
 ;// line 1
-		;// line 1
-		p("	<div class=\"clearfix ");// line 3
-		p(Forms.hasError(fld) ? "error" : "");// line 4
-		p("\">\n" + 
-"	    <label for=\"");// line 4
-		p(fld.name());// line 5
-		p("\">");// line 5
-		p(label);// line 5
-		p("</label>\n" + 
-"	    <div class=\"input\">\n" + 
-"	        \n" + 
-"	    <input type=\"text\" id=\"");// line 5
-		p(fld.name());// line 8
-		p("\" name=\"");// line 8
-		p(fld.name());// line 8
-		p("\" value=\"");// line 8
-		p(fld.value());// line 8
-		p("\" >\n" + 
-"	        <span class=\"help-inline\">");// line 8
-		p(Forms.fieldSpecs(fld));// line 9
-		p("</span> \n" + 
-"	    </div>\n" + 
-"	</div>");// line 9
+		p("\n" + 
+"\n");// line 1
+		p("\n" + 
+"<h2>\n" + 
+"404: No handler found:\n" + 
+"</h2>\n" + 
+"\n" + 
+"<h4>\n" + 
+"request: ");// line 3
+		p(rh.uri());// line 10
+		p("</h4>\n");// line 10
 		
 		endDoLayout(sourceTemplate);
 	}

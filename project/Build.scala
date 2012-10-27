@@ -4,12 +4,12 @@ import PlayProject._
 
 object ApplicationBuild extends Build {
 
-    val appName         = "computer-database-jpa"
+    val appName         = "computer-japid"
     val appVersion      = "1.0"
 
     val appDependencies = Seq(
       "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final"
-      ,"japid42" % "japid42_2.9.1" % "0.5.1"
+      ,"japid42" % "japid42_2.9.1" % "0.5.2"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(

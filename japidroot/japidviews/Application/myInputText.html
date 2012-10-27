@@ -1,9 +1,7 @@
 @import utils.Forms
 
 @(Field fld, String label)
-	@boolean hasError = fld.errors() != null && fld.errors().size() > 0;
-	@String errorClass = hasError? "error" : "";
-	<div class="clearfix $errorClass">
+	<div class="clearfix ${Forms.hasError(fld) ? "error" : ""}">
 	    <label for="$fld.name()">$label</label>
 	    <div class="input">
 	        

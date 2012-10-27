@@ -31,12 +31,13 @@ public class createForm extends main
 	}
 
 // - add implicit fields with Play
+boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : false;
 
-	final Request request = Implicit.request(); 
-	final Response response = Implicit.response(); 
-	final Session session = Implicit.session();
-	final Flash flash = Implicit.flash();
-	final Lang lang = Implicit.lang();
+	final Request request = hasHttpContext? Implicit.request() : null;
+	final Response response = hasHttpContext ? Implicit.response() : null;
+	final Session session = hasHttpContext ? Implicit.session() : null;
+	final Flash flash = hasHttpContext ? Implicit.flash() : null;
+	final Lang lang = hasHttpContext ? Implicit.lang() : null;
 	final play.Play _play = new play.Play(); 
 
 // - end of implicit fields with Play 
@@ -67,9 +68,9 @@ public class createForm extends main
 	private Form<Computer> computerForm; // line 5
 	public cn.bran.japid.template.RenderResult render(Form<Computer> computerForm) {
 		this.computerForm = computerForm;
-		long t = -1;
+		long __t = -1;
 		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 5
-		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), t, actionRunners, sourceTemplate);
+		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
@@ -88,19 +89,22 @@ public class createForm extends main
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 14// line 14
             final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 15// line 15
             final myInputText _myInputText2 = new myInputText(getOut()); _myInputText2.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText2.render(computerForm.apply("discontinued"),"Discontinued date"); // line 16// line 16
-            final select _select3 = new select(getOut()); _select3.setActionRunners(getActionRunners()).setOut(getOut()); _select3.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 18// line 18
+		p("            \n");// line 16
+		p("\n" + 
+"            ");// line 18
+		final select _select3 = new select(getOut()); _select3.setActionRunners(getActionRunners()).setOut(getOut()); _select3.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 20// line 20
 		p("            \n" + 
 "\n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Create this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 23
-		p(routes.Application.list(0, "name", "desc", ""));// line 30
+"            <a href=\"");// line 25
+		p(routes.Application.index());// line 32
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
 "    </form>\n" + 
-"\n");// line 30
+"\n");// line 32
 		
 		endDoLayout(sourceTemplate);
 	}

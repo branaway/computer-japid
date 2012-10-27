@@ -29,6 +29,7 @@ public class Application extends JapidController {
      * Handle default path requests, redirect to computers list
      */
     public static Result index() {
+//    	throw new RuntimeException("something is not right");
         return GO_HOME;
     }
 
