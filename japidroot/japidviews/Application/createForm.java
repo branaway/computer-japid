@@ -88,11 +88,12 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "            ");// line 12
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 14// line 14
             final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 15// line 15
-            final myInputText _myInputText2 = new myInputText(getOut()); _myInputText2.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText2.render(computerForm.apply("discontinued"),"Discontinued date"); // line 16// line 16
+		p("            ");// line 15
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued date"));// line 16
 		p("            \n");// line 16
 		p("\n" + 
 "            ");// line 18
-		final select _select3 = new select(getOut()); _select3.setActionRunners(getActionRunners()).setOut(getOut()); _select3.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 20// line 20
+		final select _select2 = new select(getOut()); _select2.setActionRunners(getActionRunners()).setOut(getOut()); _select2.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 20// line 20
 		p("            \n" + 
 "\n" + 
 "        </fieldset>\n" + 

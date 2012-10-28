@@ -8,6 +8,7 @@ import play.data.Form.Field;
 import play.data.validation.ValidationError;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
+import utils.Forms;
 import views.html.createForm;
 import views.html.editForm;
 import views.html.list;
@@ -116,6 +117,8 @@ public class Application extends JapidController {
         flash("success", "Computer " + computerForm.get().name + " has been created");
         return GO_HOME;
     }
+
+    
     
     /**
      * Handle computer deletion
@@ -126,7 +129,9 @@ public class Application extends JapidController {
         flash("success", "Computer has been deleted");
         return GO_HOME;
     }
-    
 
+    public static Result inputText(Field fld, String label) {
+    	return renderJapid(fld.name(), fld.value(), label, Forms.fieldSpecs(fld), fld.errors() != null && fld.errors().size() > 0);
+    }
 }
             

@@ -1,0 +1,11 @@
+@import utils.Forms
+
+@(String name, String value, String label, String info, boolean hasError)
+<div class="clearfix ${hasError ? "error" : ""}">
+    <label for="$name">$label</label>
+    <div class="input">
+        
+    <input type="text" id="$name" name="$name" value="~value" >
+        <span class="help-inline">~info</span> 
+    </div>
+</div>
