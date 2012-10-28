@@ -1,31 +1,32 @@
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
 
-@extends main
+@extends main("List all the computers")
 
 *{
-	Helper generating navigation links 
+	Helper generating navigation links. We also have the same method defined in the Application
+	controller to demo the flexibility.
 }*
 
 @def link(Integer newPage, String newSortBy)
-
-
-@    String sortBy = currentSortBy;
-@    String order = currentOrder;
+%{
+	String sortBy = currentSortBy;
+    String order = currentOrder;
     
-@    if(newSortBy != null) {
-@        sortBy = newSortBy;
-@        if(currentSortBy == newSortBy) {
-@            if(currentOrder == "asc") {
-@                order = "desc";
-@            } else {
-@                order = "asc";
-@            }
-@        } else {
-@            order = "asc";
-@        }
-@    }
+    if(newSortBy != null) {
+        sortBy = newSortBy;
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc";
+            } else {
+                order = "asc";
+            }
+        } else {
+            order = "asc";
+        }
+    }
     
-    @// Generate the link
+}%
+    // Generate the link
     $routes.Application.list(newPage, sortBy, order, currentFilter)
     
 @
@@ -36,7 +37,7 @@
 
 @def header (String key, String title)
     <th class="$key.replace(".","_") header  @if(currentSortBy.equals(key)){@ ${currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp"} @}@">
-        <a href="$link(0, key)">$title</a>
+        <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
     </th>
 @
 
@@ -55,7 +56,7 @@
 
     <div id="actions">
         
-        <form action="$link(0, "name")" method="GET">
+        <form action="$Application.link(currentSortBy, currentOrder, currentFilter, 0, "name")" method="GET">
             <input type="search" id="searchbox" name="f" value="$currentFilter" placeholder="Filter by computer name...">
             <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
         </form>

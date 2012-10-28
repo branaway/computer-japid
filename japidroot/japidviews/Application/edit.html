@@ -1,8 +1,7 @@
 @import utils.Forms;
 
 @(Long id, Form<Computer> computerForm)
-
-@extends main
+@extends main("Edit A Computer")
 
     
     <h1>Edit computer/Japid</h1>
@@ -12,7 +11,8 @@
         
             @t myInputText(computerForm.apply("name"), "名称")
             @t myInputText(computerForm.apply("introduced"), "Introduced date")
-            @t myInputText(computerForm.apply("discontinued"), "Discontinued date")
+
+            $Application.inputText(computerForm.apply("discontinued"), "Discontinued Date")
 
             @t select( \
             	computerForm.apply("company.id"), \

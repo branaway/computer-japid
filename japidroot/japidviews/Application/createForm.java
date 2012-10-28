@@ -2,9 +2,6 @@ package japidviews.Application;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
-import play.data.Form.Field;
-import utils.Forms;
-import play.data.Form;
 import play.mvc.Http.Context.Implicit;
 import models.*;
 import play.i18n.Lang;
@@ -65,47 +62,48 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	}
 ////// end of named args stuff
 
-	private Form<Computer> computerForm; // line 5
+	private Form<Computer> computerForm; // line 1
 	public cn.bran.japid.template.RenderResult render(Form<Computer> computerForm) {
 		this.computerForm = computerForm;
 		long __t = -1;
-		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 5
+		try {super.layout("Add a computer");} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
 ;// line 1
-;// line 3
 		p("\n" + 
-"\n");// line 5
+"\n");// line 1
 		p("    <h1>Add a Computer/Japid</h1>\n" + 
 "    \n" + 
-"    <form method=\"POST\" action=\"");// line 8
-		p(routes.Application.save());// line 12
+"    <form method=\"POST\" action=\"");// line 3
+		p(routes.Application.save());// line 7
 		p("\">\n" + 
 "        <fieldset>\n" + 
-"            ");// line 12
-		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 14// line 14
-            final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 15// line 15
-		p("            ");// line 15
-		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued date"));// line 16
-		p("            \n");// line 16
+"            ");// line 7
+		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 9// line 9
+            final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 10// line 10
+		p("            \n" + 
+"            ");// line 10
+		p("            ");// line 12
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued date"));// line 13
+		p("            \n");// line 13
 		p("\n" + 
-"            ");// line 18
-		final select _select2 = new select(getOut()); _select2.setActionRunners(getActionRunners()).setOut(getOut()); _select2.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 20// line 20
+"            ");// line 15
+		final select _select2 = new select(getOut()); _select2.setActionRunners(getActionRunners()).setOut(getOut()); _select2.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 17// line 17
 		p("            \n" + 
 "\n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Create this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 25
-		p(routes.Application.index());// line 32
+"            <a href=\"");// line 22
+		p(routes.Application.index());// line 29
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
 "    </form>\n" + 
-"\n");// line 32
+"\n");// line 29
 		
 		endDoLayout(sourceTemplate);
 	}

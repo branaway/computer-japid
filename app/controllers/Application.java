@@ -133,5 +133,28 @@ public class Application extends JapidController {
     public static Result inputText(Field fld, String label) {
     	return renderJapid(fld.name(), fld.value(), label, Forms.fieldSpecs(fld), fld.errors() != null && fld.errors().size() > 0);
     }
+
+	public static String link(String currentSortBy, String currentOrder,
+			String currentFilter, Integer newPage, String newSortBy) {
+	
+		String sortBy = currentSortBy;
+		String order = currentOrder;
+	
+		if (newSortBy != null) {
+			sortBy = newSortBy;
+			if (currentSortBy == newSortBy) {
+				if (currentOrder == "asc") {
+					order = "desc";
+				} else {
+					order = "asc";
+				}
+			} else {
+				order = "asc";
+			}
+		}
+	
+		return routes.Application.list(newPage, sortBy, order, currentFilter)
+				.url();
+	}
 }
             

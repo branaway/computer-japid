@@ -46,24 +46,30 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	public main(StringBuilder out) {
 		super(out);
 	}
-	@Override public void layout() {
-		beginDoLayout(sourceTemplate);		p("<!DOCTYPE html>\n" + 
+	private String msg; // line 1
+	 public void layout(String msg) {
+		this.msg = msg;
+		beginDoLayout(sourceTemplate);		;// line 1
+		p("\n" + 
+"<!DOCTYPE html>\n" + 
 "<html>\n" + 
 "    <head>\n" + 
-"        <title>Computers database with Japid</title>\n" + 
-"        <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"");// line 1
-		p(routes.Assets.at("stylesheets/bootstrap.min.css"));// line 5
-		p("\"> \n" + 
+"        <title>Computers database with Japid - ");// line 1
+		p(msg);// line 5
+		p("</title>\n" + 
 "        <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"");// line 5
-		p(routes.Assets.at("stylesheets/main.css"));// line 6
+		p(routes.Assets.at("stylesheets/bootstrap.min.css"));// line 6
+		p("\"> \n" + 
+"        <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"");// line 6
+		p(routes.Assets.at("stylesheets/main.css"));// line 7
 		p("\"> \n" + 
 "    </head>\n" + 
 "    <body>\n" + 
 "        \n" + 
 "        <header class=\"topbar\">\n" + 
 "            <h1 class=\"fill\">\n" + 
-"                <a href=\"");// line 6
-		p(routes.Application.index());// line 12
+"                <a href=\"");// line 7
+		p(routes.Application.index());// line 13
 		p("\">\n" + 
 "                    Play 2.0/Japid sample application &mdash; Computer database\n" + 
 "                </a>\n" + 
@@ -71,12 +77,12 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "        </header>\n" + 
 "        \n" + 
 "        <section id=\"main\">\n" + 
-"            ");// line 12
-		doLayout();// line 19
+"            ");// line 13
+		doLayout();// line 20
 		p("        </section>\n" + 
 "        \n" + 
 "    </body>\n" + 
-"</html>\n");// line 19
+"</html>\n");// line 20
 				endDoLayout(sourceTemplate);	}
 
 	protected abstract void doLayout();

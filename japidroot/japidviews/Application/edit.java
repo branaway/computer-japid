@@ -69,7 +69,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		this.id = id;
 		this.computerForm = computerForm;
 		long __t = -1;
-		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 3
+		try {super.layout("Edit A Computer");} catch (RuntimeException e) { super.handleException(e);} // line 3
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 	@Override protected void doLayout() {
@@ -77,20 +77,23 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 //------
 ;// line 1
 		;// line 1
-		p("\n");// line 3
+		;// line 3
 		p("    \n" + 
 "    <h1>Edit computer/Japid</h1>\n" + 
 "    \n" + 
-"    <form method=\"POST\" action=\"");// line 5
-		p(routes.Application.update(id));// line 10
+"    <form method=\"POST\" action=\"");// line 4
+		p(routes.Application.update(id));// line 9
 		p("\">\n" + 
 "        <fieldset>\n" + 
 "        \n" + 
-"            ");// line 10
-		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称"); // line 13// line 13
-            final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 14// line 14
-            final myInputText _myInputText2 = new myInputText(getOut()); _myInputText2.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText2.render(computerForm.apply("discontinued"),"Discontinued date"); // line 15// line 15
-            final select _select3 = new select(getOut()); _select3.setActionRunners(getActionRunners()).setOut(getOut()); _select3.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 17// line 17
+"            ");// line 9
+		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称"); // line 12// line 12
+            final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 13// line 13
+		p("            ");// line 13
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 15
+		p("\n" + 
+"            ");// line 15
+		final select _select2 = new select(getOut()); _select2.setActionRunners(getActionRunners()).setOut(getOut()); _select2.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 17// line 17
 		p("        \n" + 
 "        </fieldset>\n" + 
 "        \n" + 

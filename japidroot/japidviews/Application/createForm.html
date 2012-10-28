@@ -1,11 +1,6 @@
-@import play.data.Form
-@import play.data.Form.Field
-@import utils.Forms;
-
 @(Form<Computer> computerForm)
 
-
-@extends main
+@extends main("Add a computer")
 
     <h1>Add a Computer/Japid</h1>
     
@@ -13,6 +8,8 @@
         <fieldset>
             @t myInputText(computerForm.apply("name"), "Computer name")
             @t myInputText(computerForm.apply("introduced"), "Introduced date")
+            
+            *{ let's take another approach: include a controller action here }*
             $Application.inputText(computerForm.apply("discontinued"), "Discontinued date")
             
 *{tag invocation must complete in one line. Thus we use a back-slash as the line continuator }*
