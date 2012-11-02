@@ -1,10 +1,16 @@
-This is a classic CRUD application, backed by a JDBC database. It demonstrates:
+This is a classic CRUD application, backed by a JDBC database, rendered with Japid42 for play2. 
+
+It demonstrates:
 
 - Accessing a JDBC database, using JPA.
 - Achieving, table pagination and CRUD forms.
 - Integrating with a CSS framework (Twitter Bootstrap ).
+- Rendering data in Japid. 
 
-Twitter Bootstrap requires a different form layout to the default one that the Play 2.0 form helper generates, so this application also provides an example of integrating a custom form input constructor.
+Before running this demo, you need to build Japid 42 and publish to your local repository. 
+
+Please see here:  http://github.com/branaway/japid42/issues
+
 
 2012.10.26
 
