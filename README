@@ -9,6 +9,16 @@ It demonstrates:
 
 japid42 is hosted at:  http://github.com/branaway/japid42/issues
 
+To run the sample, make sure you're using play 2.0.4.
+
+1. git clone git://github.com/branaway/computer-japid.git
+2. cd computer-japid
+3. play run
+
+
+
+History
+
 
 2012.11.1
 1. now referenced japid42 repo on github. There is no need to build japid locally. 
