@@ -72,6 +72,11 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		try {super.layout("Edit A Computer");} catch (RuntimeException e) { super.handleException(e);} // line 3
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
+
+	public static cn.bran.japid.template.RenderResult apply(Long id,Form<Computer> computerForm) {
+		return new edit().render(id, computerForm);
+	}
+
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
@@ -88,30 +93,40 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "        \n" + 
 "            ");// line 9
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称"); // line 12// line 12
-            final myInputText _myInputText1 = new myInputText(getOut()); _myInputText1.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText1.render(computerForm.apply("introduced"),"Introduced date"); // line 13// line 13
-		p("            ");// line 13
-		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 15
+		p("            \n" + 
+"            ");// line 12
+		p("			");// line 16
+		p(myInputText.apply(
+				computerForm.apply("introduced"), 
+				"Introduced Date"
+				)
+			);// line 17
+		;// line 21
+		p("			\n" + 
+"\n" + 
+"            ");// line 24
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 26
 		p("\n" + 
-"            ");// line 15
-		final select _select2 = new select(getOut()); _select2.setActionRunners(getActionRunners()).setOut(getOut()); _select2.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 17// line 17
+"            ");// line 26
+		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 28// line 28
 		p("        \n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Save this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 22
-		p(routes.Application.index());// line 28
+"            <a href=\"");// line 33
+		p(routes.Application.index());// line 39
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
 "        \n" + 
 "    </form>\n" + 
 "\n" + 
-"    <form method=\"POST\" action=\"");// line 28
-		p(routes.Application.delete(id));// line 33
+"    <form method=\"POST\" action=\"");// line 39
+		p(routes.Application.delete(id));// line 44
 		p("\" class=\"topRight\">\n" + 
 "    	<input type=\"submit\" value=\"Delete this computer\" class=\"btn danger\">\n" + 
 "    </form>\n" + 
-"    ");// line 33
+"    ");// line 44
 		
 		endDoLayout(sourceTemplate);
 	}
