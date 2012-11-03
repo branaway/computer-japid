@@ -7,10 +7,11 @@ It demonstrates:
 - Integrating with a CSS framework (Twitter Bootstrap ).
 - Rendering data in Japid. 
 
-Before running this demo, you need to build Japid 42 and publish to your local repository. 
+japid42 is hosted at:  http://github.com/branaway/japid42/issues
 
-Please see here:  http://github.com/branaway/japid42/issues
 
+2012.11.1
+1. now referenced japid42 repo on github. There is no need to build japid locally. 
 
 2012.10.26
 
