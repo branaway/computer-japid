@@ -97,11 +97,7 @@ public class Global extends GlobalSettings {
 
 Note:
 
-# To initialize Japid, call:
-<pre>
-		JapidRenderer.init(app);
-</pre>
-in the onStart method. 
+# To initialize Japid, call <code>JapidRenderer.init(app);</code> in the onStart method. 
 There are more options that one can configure about Japid, such as the default location of Japid scripts, the interval between file change detections in dev mode and import statement that will be added to all the Japid scripts. 
 # I have also over-ridden three other methods in this class to provide customized information page when 404, 500 errors are encountered in production. To test these handlers in DEV mode, please adjust the code accordingly in the if statement.
 Check out this line:
@@ -110,7 +106,7 @@ Check out this line:
 </pre>
 The error message is generated with JapidController.renderJapidWith("onError.html", h, t), which passes the h and t arguments to a Japid script named "onError.html", which is located in japidroot/japidviews. 
 
-h3. Write controllers
+h3. Controllers
 
 The difference between the using Japid and the default Scala-based template engines is:
 
@@ -436,10 +432,9 @@ To use the local template snippet, simply call it in an expression:
 h5. I18n
 
 The $getMessage(...) is to format a string based on the current language settings. Play2 manual has more about this. 
-<pre>
+<pre><code>
     $getMessage("computers.list.title", currentPage.getTotalRowCount())
-</pre>
-
+</code></pre>
 
 h5. If statement
 
@@ -456,29 +451,29 @@ It's regular Java stuff. Remember: @ starts a line of Java code, unless @ is fol
 The ending brace must be led with an @ sign too, unlike the Scala engine of Play2. It seems Japid is not smart enough to end an if statement with a bare "}", but I have chosen to do this to make the parser more robust. 
 
 The if statement has a minimalism version, if it suits your taste:
-<pre>
+<pre><code>
 @if flash.containsKey("success")
 	//
 @else
 	//
 @
-</pre>
+</code></pre>
 
 h5. For Looping 
 
 You can use whatever looping syntax that fits your need best in Java. I'm using a for loop in the list.html:
-<pre>
+<pre><code>
 @for(Computer computer : currentPage.getList()) {
 	//
 @}
-</pre>
+</code></pre>
 
 The for loop has a minimalistic version too:
-<pre>
+<pre><code>
 @for Computer computer : currentPage.getList()
 	//
 @
-</pre>
+</code></pre>
 There is very good reason to use the shorter version: it makes available a bunch of predefined variables associated with the current loop:
 <pre>
 @for String name: names 
