@@ -381,10 +381,10 @@ I have a lot to say
 h5. Local function
 
 Use "def" to define a parameterized template snippet.
-<pre>
 
+<pre><code>
 @def link(Integer newPage, String newSortBy)
-%{
+ %{
 	String sortBy = currentSortBy;
     String order = currentOrder;
     
@@ -403,7 +403,7 @@ Use "def" to define a parameterized template snippet.
       // Generate the link
     p(routes.Application.list(newPage, sortBy, order, currentFilter));
     
-}%
+ }%
     
 @
 
@@ -413,18 +413,18 @@ Use "def" to define a parameterized template snippet.
         <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
     </th>
 @
-</pre>
+</code></pre>
 
-- A template snippet is local to the current template. It wraps a chunk of template that can be used multiple times, usually with different arguments, in the same file.
-- It has access to the arguments to the whole Japid script. 
-- It ends with a Japid delimiter "@".  
+* A template snippet is local to the current template. It wraps a chunk of template that can be used multiple times, usually with different arguments, in the same file.
+* It has access to the arguments to the whole Japid script. 
+* It ends with a Japid delimiter "@".  
 
 Here are some Japid syntax:
-- %{ ... }%: to include a block of Java code 
-- the p() method is to print a string value to the current template output stream.
-- $key.replace(".","_"): an expression
-- ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}: a Java expression
-- $Application.link(currentSortBy, currentOrder, currentFilter, 0, key): a Java expression. The link method is a static method I conveniently put in the Application class. It's exactly the same link as defined above, only to demo how this can be done alternatively.  
+* %{ ... }%: to include a block of Java code 
+* the p() method is to print a string value to the current template output stream.
+* $key.replace(".","_"): an expression
+* ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}: a Java expression
+* $Application.link(currentSortBy, currentOrder, currentFilter, 0, key): a Java expression. The link method is a static method I conveniently put in the Application class. It's exactly the same link as defined above, only to demo how this can be done alternatively.  
 
 To use the local template snippet, simply call it in an expression:
 
