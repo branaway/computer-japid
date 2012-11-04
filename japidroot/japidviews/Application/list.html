@@ -1,10 +1,10 @@
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
 
-@extends main("List all the computers")
+@extends main("List All the Computers")
 
 *{
 	Helper generating navigation links. We also have the same method defined in the Application
-	controller to demo the flexibility.
+	controller to demo the flexibility. 
 }*
 
 @def link(Integer newPage, String newSortBy)
@@ -24,10 +24,9 @@
             order = "asc";
         }
     }
-    
-}%
     // Generate the link
-    $routes.Application.list(newPage, sortBy, order, currentFilter)
+    p(routes.Application.list(newPage, sortBy, order, currentFilter));
+}%
     
 @
 
@@ -36,7 +35,7 @@
 }*
 
 @def header (String key, String title)
-    <th class="$key.replace(".","_") header  @if(currentSortBy.equals(key)){@ ${currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp"} @}@">
+    <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp" : ""}">
         <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
     </th>
 @

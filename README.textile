@@ -1,36 +1,728 @@
+h1. A Sample Application that Demos Japid Rendering Engine with Play 2.0
+
+Bing Ran, China (bing.ran@iclass.com)
+
+
 This is a classic CRUD application, backed by a JDBC database, rendered with Japid42 for play2. 
 
 It demonstrates:
 
 - Accessing a JDBC database, using JPA.
 - Achieving, table pagination and CRUD forms.
-- Integrating with a CSS framework (Twitter Bootstrap ).
-- Rendering data in Japid. 
+- Rendering data with Japid. 
 
-japid42 is hosted at:  http://github.com/branaway/japid42/issues
+japid42 is a pure java template engine specifically designed for programming Java web applications for Play 2.0x series. It's hosted at:  http://github.com/branaway/japid42/issues
+It offers extremely fast script change and reloading. Roughly the default Scala based rendering engine is 10x slower in reloading a changed view. Changes in templates will never trigger an application reload.  
 
+ 
 To run the sample, make sure you're using play 2.0.4.
 
-1. git clone git://github.com/branaway/computer-japid.git
-2. cd computer-japid
-3. play run
+# git clone git://github.com/branaway/computer-japid.git
+# cd computer-japid
+# play run
+
+The application is now accessible at http://localhost:9000
+
+h2. The Anatomy of
+
+h3. Dependency
+
+The first thing is to declare the dependency of japid in the the build.scala:
+
+<pre>
+import sbt._
+import Keys._
+import PlayProject._
+
+object ApplicationBuild extends Build {
+
+    val appName         = "computer-japid"
+    val appVersion      = "1.0"
+
+    val appDependencies = Seq(
+      "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
+      "japid42" % "japid42_2.9.1" % "0.5.3"
+    )
+
+    val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+      ebeanEnabled := false,
+      resolvers += Resolver.url("Japid on Github", url("http://branaway.github.com/releases/"))(Resolver.ivyStylePatterns)
+    )
+
+}
+        
+</pre>
+
+A resolver pointing to the japid repository on Github is added to the resolver chain. Japid is then added to the dependency list. 
+
+h3. Initialize Japid
+
+The initialization of Japid takes place in Global.java in the app folder:
+
+<pre>
+import play.Application;
+import play.GlobalSettings;
+import play.Play;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Result;
+import play.mvc.Results;
+import cn.bran.japid.template.JapidRenderer;
+import cn.bran.play.JapidController;
+
+public class Global extends GlobalSettings {
+    @Override
+	public void onStart(Application app) {
+		JapidRenderer.init(app);
+    }
+
+	@Override
+	public Result onError(RequestHeader h, Throwable t) {
+		if (Play.application().isProd())
+			return Results.internalServerError(JapidController.renderJapidWith("onError.html", h, t));
+		else
+			return super.onError(h, t);
+	}
+
+	@Override
+	public Result onBadRequest(RequestHeader r, String s) {
+		if (Play.application().isProd())
+			return Results.badRequest(JapidController.renderJapidWith("onBadRequest.html", r, s));
+		else
+			return super.onBadRequest(r, s);
+	}
+
+	@Override
+	public Result onHandlerNotFound(RequestHeader r) {
+		if (Play.application().isProd() || Play.application().isDev())
+			return Results.notFound(JapidController.renderJapidWith("onHandlerNotFound.html", r));
+		else
+			return super.onHandlerNotFound(r);
+	}
+}
+</pre>
+
+Note:
+
+# To initialize Japid, call:
+<pre>
+		JapidRenderer.init(app);
+</pre>
+in the onStart method. 
+There are more options that one can configure about Japid, such as the default location of Japid scripts, the interval between file change detections in dev mode and import statement that will be added to all the Japid scripts. 
+# I have also over-ridden three other methods in this class to provide customized information page when 404, 500 errors are encountered in production. To test these handlers in DEV mode, please adjust the code accordingly in the if statement.
+Check out this line:
+<pre>
+	return Results.internalServerError(JapidController.renderJapidWith("onError.html", h, t));
+</pre>
+The error message is generated with JapidController.renderJapidWith("onError.html", h, t), which passes the h and t arguments to a Japid script named "onError.html", which is located in japidroot/japidviews. 
+
+h3. Write controllers
+
+The difference between the using Japid and the default Scala-based template engines is:
+
+# Controllers inherit from JapidController instead of the plain Controller. JapidController class is a child class of the Controller class. It adds a bunch of renderJapid(...) and renderJapidWith(...) static methods for the controller to invoke Japid scripts. This is not absolutely required, but is more of a convenient arrangment.  
+# The default template engine are invoked explicitly in the controllers. i.e., the view classes are statically linked to the controller code. On the other hand, Japid views are always invoked by name. Japid scripts are compiled "On demand".
+
+<pre>
+package controllers;
+import java.util.List;
+import models.Computer;
+import play.data.Form;
+import play.data.Form.Field;
+import play.data.validation.ValidationError;
+import play.db.jpa.Transactional;
+import play.mvc.Result;
+import utils.Forms;
+import cn.bran.play.JapidController;
+// only a few actions are shown
+public class Application extends JapidController {
+    @Transactional(readOnly=true)
+    public static Result list(int page, String sortBy, String order, String filter) {
+    	return renderJapid(Computer.page(page, 10, sortBy, order, filter), sortBy, order, filter);
+    }
+    
+    @Transactional(readOnly=true)
+    public static Result edit(Long id) {
+        Form<Computer> computerForm = form(Computer.class).fill(
+            Computer.findById(id)
+        );
+        return renderJapid(id, computerForm);
+    }
+    
+    @Transactional
+    public static Result update(Long id) {
+        Form<Computer> computerForm = form(Computer.class).bindFromRequest();
+        if(computerForm.hasErrors()) {
+            return badRequest(renderJapidWith("@edit.html", id, computerForm));
+        }
+        computerForm.get().update(id);
+        flash("success", "Computer " + computerForm.get().name + " has been updated.");
+        return GO_HOME;
+    }
+    
+    @Transactional(readOnly=true)
+    public static Result create() {
+        Form<Computer> computerForm = form(Computer.class);
+        return ok(renderJapidWith("@createForm.html", computerForm));
+    }
+// ...    
+}
+
+As you can see, using japid in controllers is a simple replacement of explicit invocation of the scala view class with renderJapid(...) or renderJapidWith("japid script name", ...). 
+The renderJapid() method looks for a japid script in a folder rooted in "japidroot/japidviews", the structure of which is parallel to the package/class structure of the controllers. 
+The renderJapidWith() method take the name of the japid script as the first parameter. I put an "@" in front of the script name, to indicate that the script is in the same folder as the "default" japid script, otherwise I need to specify the script with the full path starting with "japidviews", such as "japidviews/Application/edit.html".  
+Either method returns an instance of Result, which is a valid object to return from the actions. It's also a valid object to wrap in ok(), badRequest() calls, which will handle the headers properly.
+
+It's important to note that since Japid comes with its own compiler and class loader that uses Play's classloader as the parent classloader, not the other way around, controllers cannot reference the japid views directly while views can reference models and controllers.  
+    
+</pre>
+
+h3. Render Data in Japid Scripts
+
+All scripts are put in the "japidroot/japidviews" folder. The "japidroot" part is configurable through JapidRender.setTemplateRoot(...).
+The structure of the root folder is parallel to the structure of the controllers folder, only the action names are mapped a bunch of files in a folder named after the controller class.  
+Let's take a look at the list.html, which is the default view script of the list(...) action. 
+It's a little bit long...
+
+<pre>
+@(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
+
+@extends main("List all the computers")
+
+*{
+	Helper generating navigation links. We also have the same method defined in the Application
+	controller to demo the flexibility.
+}*
+
+@def link(Integer newPage, String newSortBy)
+	%{
+		String sortBy = currentSortBy;
+	    String order = currentOrder;
+	    
+	    if(newSortBy != null) {
+	        sortBy = newSortBy;
+	        if(currentSortBy == newSortBy) {
+	            if(currentOrder == "asc") {
+	                order = "desc";
+	            } else {
+	                order = "asc";
+	            }
+	        } else {
+	            order = "asc";
+	        }
+	    }
+	    // Generate the link
+	    p(routes.Application.list(newPage, sortBy, order, currentFilter));
+	    
+	}%
+@
+
+*{
+	Helper generating table headers
+}*
+
+@def header (String key, String title)
+    <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp" : ""}">
+        <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
+    </th>
+@
 
 
+    <h1 id="homeTitle">
+    
+    $getMessage("computers.list.title", currentPage.getTotalRowCount())
+    
+    </h1>
 
-History
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> $flash.get("success")
+        </div>
+    @} 
+
+    <div id="actions">
+        
+        <form action="$Application.link(currentSortBy, currentOrder, currentFilter, 0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="$currentFilter" placeholder="Filter by computer name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+        
+        <a class="btn success" id="add" href="$routes.Application.create()">Add a new computer</a>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount() == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    @} else {
+        
+        <table class="computers zebra-striped">
+            <thead>
+                <tr>
+                    $header("name", "Computer name")
+                    $header("introduced", "Introduced")
+                    $header("discontinued", "Discontinued")
+                    $header("company.name", "Company")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(Computer computer : currentPage.getList()) {
+                    <tr>
+                        <td><a href="$routes.Application.edit(computer.id)">$computer.name</a></td>
+                        <td>
+                            @if(computer.introduced == null) {
+                                <em>-</em>
+                            @} else {
+                                $format(computer.introduced, "dd MMM yyyy")
+                            @}
+                        </td>
+                        <td>
+                            @if(computer.discontinued == null) {
+                                <em>-</em>
+                            @} else {
+                               	$format(computer.discontinued, "dd MMM yyyy")
+                            @}
+                        </td>
+                        <td>
+                            @if(computer.company == null) {
+                                <em>-</em>
+                            @} else {
+                                $computer.company.name
+                            @}
+                        </td>
+                    </tr>
+                @}
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev()) {
+                    <li class="prev">
+                        <a href="$link(currentPage.getPageIndex() - 1, null)">&larr; Previous</a>
+                    </li>
+                @} else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                @}
+                <li class="current">
+                    <a>Displaying $currentPage.getDisplayXtoYofZ()</a>
+                </li>
+                @if(currentPage.hasNext()) {
+                    <li class="next">
+                        <a href="$link(currentPage.getPageIndex() + 1, null)">Next &rarr;</a>
+                    </li>
+                @} else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                @}
+            </ul>
+        </div>
+        
+    @}
+</pre>
+
+Notes:
+
+h5. Parameter list
+<pre>
+@(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
+<pre> 
+
+As can be seen, it's the same as in the scala template, only declared in the Java way: the type proceeds the name.
+It can span multiple lines of course.
+
+h5. The layout
+
+The parent layout of a "page" is specified with the extends key word.
+
+<pre>
+@extends main("...")
+</pre>
+
+One concept to note is that Japid has the concept of "layout", which is inherited from Play 1. In Play 2, the layout concept is merged to the standard template since it supports closure.
+The good thing about it is that the whole script does not need to be wrapped in a big pair of braces. 
+
+The layout is listed below:
+<pre>
+@(String msg)
+<html>
+    <head>
+        <title>Computers database with Japid - $msg</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="$routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+        <link rel="stylesheet" type="text/css" media="screen" href="$routes.Assets.at("stylesheets/main.css")"> 
+    </head>
+    <body>
+        
+        <header class="topbar">
+            <h1 class="fill">
+                <a href="$routes.Application.index()">
+                    Play 2.0/Japid sample application &mdash; Computer database
+                </a>
+            </h1>
+        </header>
+        
+        <section id="main">
+            @doLayout
+        </section>
+        
+    </body>
+</html>
+</pre>
+
+Note:
+# A layout can have parameters, just like any regular templates. 
+# Use "$" to evaluate an expression in raw. It can be $expr or ${expr}. The latter makes the expression part eye friendlier, and also allows the expression to span more than one line. The shorter version is smart enough to know the boundary of an expression, as long as it's on the same line. 
+# The HTML safe way of expression is "~" or "~{}". Unless you're sure of the nature of the expressions, prefer "~" over "$" for expressions.
+# Reverse URL lookup in Play 2 is a simple method call. Therefore it's just an expression in Japid:
+<pre>
+$routes.Assets.at("stylesheets/bootstrap.min.css")
+or:
+$routes.Application.index()
+</pre>
+# To "call back" to the body, use @doLayout.
+
+
+In fact japid can use a regular template as a layout, just like in the Play 2.
+<pre>
+@t myMain("the title") |
+   <div>
+   		the rest of the body
+   </div>
+@
+</pre>
+
+* The "@t" notation is to invoke another template. Sometimes those templates are referred to as "tags", although there is no difference between a tag and a regular template. Any regular template can be invoked as tags.  
+* The "myMain" script is almost the same thing as the main.html, except it uses @doBody instead of @doLayout. 
+* The bar at the end of the line must present. It may be followed by a parameter list if there is any.  
+* The whole body must be ended with another "@" sign.
+
+h5. The comments
+
+Comments are wrapped in *{ }*
+<pre>
+*{
+I have a lot to say
+}*
+
+@// one liner comment, just like Java.
+</pre>
+
+h5. Local function
+
+Use "def" to define a parameterized template snippet.
+<pre>
+
+@def link(Integer newPage, String newSortBy)
+%{
+	String sortBy = currentSortBy;
+    String order = currentOrder;
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy;
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc";
+            } else {
+                order = "asc";
+            }
+        } else {
+            order = "asc";
+        }
+    }
+      // Generate the link
+    p(routes.Application.list(newPage, sortBy, order, currentFilter));
+    
+}%
+    
+@
+
+
+@def header (String key, String title)
+    <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}">
+        <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
+    </th>
+@
+<pre>
+
+- A template snippet is local to the current template. It wraps a chunk of template that can be used multiple times, usually with different arguments, in the same file.
+- It has access to the arguments to the whole Japid script. 
+- It ends with a Japid delimiter "@".  
+
+Here are some Japid syntax:
+- %{ ... }%: to include a block of Java code 
+- the p() method is to print a string value to the current template output stream.
+- $key.replace(".","_"): an expression
+- ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}: a Java expression
+- $Application.link(currentSortBy, currentOrder, currentFilter, 0, key): a Java expression. The link method is a static method I conveniently put in the Application class. It's exactly the same link as defined above, only to demo how this can be done alternatively.  
+
+To use the local template snippet, simply call it in an expression:
+
+<pre>
+	the header: $header("name", "Computer name")
+	the link: $link(currentPage.getPageIndex() - 1, null)
+</pre>
+
+h5. I18n
+
+The $getMessage(...) is to format a string based on the current language settings. Play2 manual has more about this. 
+<pre>
+    $getMessage("computers.list.title", currentPage.getTotalRowCount())
+</pre>
+
+
+h5. If statement
+
+<pre>
+   @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> $flash.get("success")
+        </div>
+   @} 
+</pre>
+
+It's regular Java stuff. Remember: @ starts a line of Java code, unless @ is followed by some special predefined directives. 
+
+The ending brace must be led with an @ sign too, unlike the Scala engine of Play2. It seems Japid is not smart enough to end an if statement with a bare "}", but I have chosen to do this to make the parser more robust. 
+
+The if statement has a minimalism version, if it suits your taste:
+<pre>
+@if flash.containsKey("success")
+	...
+@else
+	...
+@
+</pre>
+
+h5. For Looping 
+
+You can use whatever looping syntax that fits your need best in Java. I'm using a for loop in the list.html:
+<pre>
+@for(Computer computer : currentPage.getList()) {
+	...
+@}
+</pre>
+
+The for loop has a minimalistic version too:
+<pre>
+@for Computer computer : currentPage.getList()
+	...
+@
+</pre>
+There is very good reason to use the shorter version: it makes available a bunch of predefined variables associated with the current loop:
+<pre>
+@for String name: names 
+    Your name is: $name,
+    the total size: $_size,
+    the current item index: $_index,
+    is odd line? $_isOdd
+    is first? $_isFirst
+    is last? $_isLast
+@
+</pre>
+The _size and _index are of integer type. The others are of boolean type. 
+
+h5. Format and a bunch of utility methods 
+
+You may wonder where the format method in the following expression comes from. 
+<pre>
+$format(computer.introduced, "dd MMM yyyy")
+</pre>
+
+It's in a class named WebUtils in the Japid jar and this classes contained quite a few convenient static methods available in the Japid scripts. Read it for your pleasure. 
+
+h5. Importing classes to Japid scripts. 
+
+Japid scripts are transformed to Java files which are then compiled to Java classes. You can import any Java class to your scripts just like in any Java source file:
+<pre>s
+@import com.mycompany.Foo
+@import com.mycompany.Utils.*
+</pre>
+No semi-colon is required at the end.
+
+A few packages and classes are automatically imported for you:
+<pre>
+import java.util.*;
+import java.io.*;
+import play.mvc.Http.Context.Implicit;
+import play.i18n.Lang;
+import play.data.Form;
+import play.data.Form.Field;
+import play.mvc.Http.Request;
+import play.mvc.Http.Response;
+import play.mvc.Http.Session;
+import play.mvc.Http.Flash;
+import play.data.validation.Validation;
+import static cn.bran.japid.util.WebUtils.*;
+import controllers.*;
+import models.*;
+</pre>
+
+As you can see, a bunch of play's implicit object is also available in the scripts.  
+
+h5. Form handling
+
+I'll use another Japid script as an example:
+<pre>
+@(Long id, Form<Computer> computerForm)
+@extends main("Edit A Computer")
+
+    
+    <h1>Edit computer/Japid</h1>
+    
+    <form method="POST" action="$routes.Application.update(id)">
+        <fieldset>
+        
+            @t myInputText(computerForm.apply("name"), "名称")
+            
+ 			${myInputText.apply(
+				computerForm.apply("introduced"), 
+				"Introduced Date"
+				)
+			}
+
+            $Application.inputText(computerForm.apply("discontinued"), "Discontinued Date")
+
+            @t select( \
+            	computerForm.apply("company.id"), \
+                Company.options(), \
+                "Company", \
+				"- Choose a company -" \
+            )
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this computer" class="btn primary"> or 
+            <a href="$routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    </form>
+
+    <form method="POST" action="$routes.Application.delete(id)" class="topRight">
+    	<input type="submit" value="Delete this computer" class="btn danger">
+    </form>
+    
+</pre>
+
+Note:
+Japid does not provide built-in helpers to handle forms and fields. I feel the helpers does not provide enough values. One can easily added helpers using either the local snippet or encapsulate the template in a standalone template. 
+
+The "Form" class in Play2 contains all functionalities of data binding, model validation, field constraints and format requirement. Although written in Scala, it's totally useable in Japid as well.
+
+A "Form" contains a bunch of "Field"s, each of which may carry validation annotations.
+
+In the above example, one of the parameter is a form of Computer:
+<pre>
+@(Long id, Form<Computer> computerForm)
+</pre>
+
+Of course you can pass an instance of Computer directly without wrapping it in a Form. But then you need do the validation yourself. 
+<pre>
+@(Long id, Computer> computer)
+</pre>
+
+To get field of the form, we call Form's apply method:
+<pre>
+  @t myInputText(computerForm.apply("name"), "Name")
+</pre>
+
+The myInputText is a template defined in myInputText.html:
+<pre>
+@import utils.Forms
+
+@(Field fld, String label)
+<div class="clearfix ${Forms.hasError(fld) ? "error" : ""}">
+    <label for="$fld.name()">$label</label>
+    <div class="input">
+        
+    <input type="text" id="$fld.name()" name="$fld.name()" value="$fld.value()" >
+        <span class="help-inline">$Forms.fieldSpecs(fld)</span> 
+    </div>
+</div>
+</pre>
+
+The Forms utility class is in the utils package in the app folder. Check it out. 
+
+The Field's name and value are obtained with the name() and value() methods. 
+
+The myImputText template can be invoked in two ways:
+<pre>
+@Field f = computerForm.apply("name");
+
+@t myInputText(f, "名称")
+
+or:
+
+$myInputText.apply(f, "Name")
+</pre>
+
+Here I assigned the field to a variable before using it.
+The @t syntax is more powerful that it can take a block of parameterized template text:
+<pre>
+@t myTag(String s) | String name, int age
+	the returned value: $name, $age
+@
+</pre>
+
+The myTag template may look something like this:
+<pre>
+@(String msg)
+do someting about it, then
+@doBody("my name", 18)
+do more about it
+</pre>
+When merging together, it outputs something like this:
+<pre>
+do someting about it, then
+	the returned value: my name, 18
+do more about it
+</pre>
+
+The apply() method of any templates returns a piece of content that can be merged to the current text stream. But this way of invoking another template does not take "callbacks", thus less powerful.
+Calling a template in an expression makes it possible to span multiple lines when combined with ${} or ~{}, while @t syntax assumes the whole statement is a one-liner. 
+If you really like using the @t and want to span multiple lines, use a "line continuator":
+<pre>
+@t select( \
+	computerForm.apply("company.id"), \
+    Company.options(), \
+    "Company", \
+	"- Choose a company -" \
+)
+</pre> 
+
+h5. Summary
+
+Java compiler is a very fast machine comapred with Scala compiler, almost 10x faster. Japid makes deveoping Java Play application a breeze. 
+
+I hope I have explained the sample well enough to get interested in trying Japid in your own Java Play projects.  
+
+Feedback please goes to bing.ran@gmail.com
+ 
+
+h2. Appendex
+
+h3. History
 
 
 2012.11.1
-1. now referenced japid42 repo on github. There is no need to build japid locally. 
+# now referenced japid42 repo on github. There is no need to build japid locally. 
 
 2012.10.26
 
 Bing: I have ported the app to using Japid as the rendering engine. Please see the 
 
-1. project/Build.scala
-2. app/Global.java: to initialize the Japid and added customized error handlers 
-3. app/controllers/Application.java and
-4. the japidroot folder
+# project/Build.scala
+# app/Global.java: to initialize the Japid and added customized error handlers 
+# app/controllers/Application.java and
+# the japidroot folder
 
 to understand the integration of Japid with Play2. 
 

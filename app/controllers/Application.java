@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.List;
 
+
 import models.Computer;
 import play.data.Form;
 import play.data.Form.Field;
@@ -9,9 +10,6 @@ import play.data.validation.ValidationError;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import utils.Forms;
-import views.html.createForm;
-import views.html.editForm;
-import views.html.list;
 import cn.bran.play.JapidController;
 
 /**

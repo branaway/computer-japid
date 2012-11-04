@@ -2,7 +2,6 @@ package japidviews.Application;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
-import cn.bran.japid.template.RenderResult;
 import utils.Forms;
 import play.mvc.Http.Context.Implicit;
 import models.*;
@@ -73,11 +72,11 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 3
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
-	
-	public static RenderResult apply(Field fld,String label) {
+
+	public static cn.bran.japid.template.RenderResult apply(Field fld,String label) {
 		return new myInputText().render(fld, label);
 	}
-	
+
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
