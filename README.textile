@@ -314,7 +314,7 @@ Let's take a look at the list.html, which is the default view script of the list
 
 Notes:
 
-h5. Parameter list
+h4. Parameter list
 
 <pre>
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
@@ -323,7 +323,7 @@ h5. Parameter list
 As can be seen, it's the same as in the scala template, only declared in the Java way: the type proceeds the name.
 It can span multiple lines of course.
 
-h5. The layout
+h4. The layout
 
 The parent layout of a "page" is specified with the extends key word.
 
@@ -341,29 +341,27 @@ Note:
 # Use "$" to evaluate an expression in raw. It can be $expr or ${expr}. The latter makes the expression part eye friendlier, and also allows the expression to span more than one line. The shorter version is smart enough to know the boundary of an expression, as long as it's on the same line. 
 # The HTML safe way of expression is "~" or "~{}". Unless you're sure of the nature of the expressions, prefer "~" over "$" for expressions.
 # Reverse URL lookup in Play 2 is a simple method call. Therefore it's just an expression in Japid:
-<pre>
+<pre><code>
 $routes.Assets.at("stylesheets/bootstrap.min.css")
 or:
 $routes.Application.index()
-</pre>
-# To "call back" to the body, use @doLayout.
-
+</code></pre>
+# To "call back" to the body, use @doLayout in the parent layout.
 
 In fact japid can use a regular template as a layout, just like in the Play 2.
-<pre>
+
+<pre><code>
 @t myMain("the title") |
-   <div>
-   		the rest of the body
-   </div>
+   the rest of the body
 @
-</pre>
+</code></pre>
 
 * The "@t" notation is to invoke another template. Sometimes those templates are referred to as "tags", although there is no difference between a tag and a regular template. Any regular template can be invoked as tags.  
 * The "myMain" script is almost the same thing as the main.html, except it uses @doBody instead of @doLayout. 
 * The bar at the end of the line must present. It may be followed by a parameter list if there is any.  
 * The whole body must be ended with another "@" sign.
 
-h5. The comments
+h4. The comments
 
 Comments are wrapped in <code>*{ }*</code>
 <pre><code>
@@ -374,7 +372,7 @@ I have a lot to say
 @// one liner comment, just like Java.
 </code></pre>
 
-h5. Local function
+h4. Local function
 
 Use "def" to define a parameterized template snippet.
 
@@ -429,14 +427,14 @@ To use the local template snippet, simply call it in an expression:
 	the link: $link(currentPage.getPageIndex() - 1, null)
 </pre>
 
-h5. I18n
+h4. I18n
 
 The $getMessage(...) is to format a string based on the current language settings. Play2 manual has more about this. 
 <pre><code>
-    $getMessage("computers.list.title", currentPage.getTotalRowCount())
+	$getMessage("computers.list.title", currentPage.getTotalRowCount())
 </code></pre>
 
-h5. If statement
+h4. If statement
 
 <pre>
    @if(flash.containsKey("success")) {
@@ -459,7 +457,7 @@ The if statement has a minimalism version, if it suits your taste:
 @
 </code></pre>
 
-h5. For Looping 
+h4. For Looping 
 
 You can use whatever looping syntax that fits your need best in Java. I'm using a for loop in the list.html:
 <pre><code>
@@ -475,7 +473,7 @@ The for loop has a minimalistic version too:
 @
 </code></pre>
 There is very good reason to use the shorter version: it makes available a bunch of predefined variables associated with the current loop:
-<pre>
+<pre><code>
 @for String name: names 
     Your name is: $name,
     the total size: $_size,
@@ -484,30 +482,31 @@ There is very good reason to use the shorter version: it makes available a bunch
     is first? $_isFirst
     is last? $_isLast
 @
-</pre>
+</code></pre>
 
 The _size and _index are of integer type. The others are of boolean type. 
 
-h5. Format and a bunch of utility methods 
+h4. Format and a bunch of utility methods 
 
 You may wonder where the format method in the following expression comes from. 
-<pre>
+
+<pre><code>
 $format(computer.introduced, "dd MMM yyyy")
-</pre>
+</code></pre>
 
 It's in a class named WebUtils in the Japid jar and this classes contained quite a few convenient static methods available in the Japid scripts. Read it for your pleasure. 
 
-h5. Importing classes to Japid scripts. 
+h4. Importing classes to Japid scripts. 
 
 Japid scripts are transformed to Java files which are then compiled to Java classes. You can import any Java class to your scripts just like in any Java source file:
-<pre>
+<pre><code>
 @import com.mycompany.Foo
 @import com.mycompany.Utils.*
-</pre>
+</code></pre>
 No semi-colon is required at the end.
 
 A few packages and classes are automatically imported for you:
-<pre>
+<pre><code>
 import java.util.*;
 import java.io.*;
 import play.mvc.Http.Context.Implicit;
@@ -522,11 +521,11 @@ import play.data.validation.Validation;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 import models.*;
-</pre>
+</code></pre>
 
 As you can see, a bunch of play's implicit object is also available in the scripts.  
 
-h5. Form handling
+h4. Form handling
 
 I'll use another Japid script as an example:
 
@@ -567,86 +566,89 @@ The "Form" class in Play2 contains all functionalities of data binding, model va
 
 A "Form" contains a bunch of "Field"s, each of which may carry validation annotations.
 
-In the above example, one of the parameter is a form of Computer:
-<pre>
+In the above example, one of the parameters is a form of Computer:
+<pre><code>
 @(Long id, Form<Computer> computerForm)
-</pre>
+</code></pre>
 
-Of course you can pass an instance of Computer directly without wrapping it in a Form. But then you need do the validation yourself. 
-<pre>
+Of course you can pass in an instance of Computer directly without wrapping it in a Form. But then you need do the validation yourself. 
+<pre><code>
 @(Long id, Computer> computer)
-</pre>
+</code></pre>
 
-To get field of the form, we call Form's apply method:
-<pre>
+To get field of the form, we call Form's *apply(...)* method:
+<pre><code>
   @t myInputText(computerForm.apply("name"), "Name")
-</pre>
+</code></pre>
 
 The myInputText is a template defined in myInputText.html:
-<pre>
-@import utils.Forms
 
-@(Field fld, String label)
-<div class="clearfix ${Forms.hasError(fld) ? "error" : ""}">
-    <label for="$fld.name()">$label</label>
-    <div class="input">
-        
-    <input type="text" id="$fld.name()" name="$fld.name()" value="$fld.value()" >
-        <span class="help-inline">$Forms.fieldSpecs(fld)</span> 
-    </div>
-</div>
-</pre>
+<pre><code>
+	@import utils.Forms
+	@(Field fld, String label)
+	<div class="clearfix ${Forms.hasError(fld) ? "error" : ""}">
+    	<label for="$fld.name()">$label</label>
+    	<div class="input">
+		    <input type="text" id="$fld.name()" name="$fld.name()" value="$fld.value()"/>
+	    	<span class="help-inline">$Forms.fieldSpecs(fld)</span> 
+	    </div>
+ 	</div>
+</code></pre>
 
-The Forms utility class is in the utils package in the app folder. Check it out. 
+The Forms utility class is in the <code>utils</code> package in the <code>app</code> folder. Check it out. 
 
 The Field's name and value are obtained with the name() and value() methods. 
 
 The myImputText template can be invoked in two ways:
-<pre>
-@Field f = computerForm.apply("name");
 
-@t myInputText(f, "名称")
-
-or:
-
-$myInputText.apply(f, "Name")
-</pre>
+<pre><code>
+	@Field f = computerForm.apply("name");
+	@t myInputText(f, "名称")
+		or:
+	$myInputText.apply(f, "Name")
+</code></pre>
 
 Here I assigned the field to a variable before using it.
+
 The @t syntax is more powerful that it can take a block of parameterized template text:
-<pre>
+
+<pre><code>
 @t myTag(String s) | String name, int age
 	the returned value: $name, $age
 @
-</pre>
+</code></pre>
 
 The myTag template may look something like this:
-<pre>
+<pre><code>
 @(String msg)
 do someting about it, then
 @doBody("my name", 18)
 do more about it
-</pre>
-When merging together, it outputs something like this:
-<pre>
+</code></pre>
+
+When merged together, it outputs something like this:
+
+<pre><code>
 do someting about it, then
 	the returned value: my name, 18
 do more about it
-</pre>
+</code></pre>
 
-The apply() method of any templates returns a piece of content that can be merged to the current text stream. But this way of invoking another template does not take "callbacks", thus less powerful.
+The *apply()* method of any templates returns a piece of content that can be merged to the current text stream. But this way of invoking another template does not take "callbacks", thus less powerful.
+
 Calling a template in an expression makes it possible to span multiple lines when combined with ${} or ~{}, while @t syntax assumes the whole statement is a one-liner. 
+
 If you really like using the @t and want to span multiple lines, use a "line continuator":
-<pre>
+<pre><code>
 @t select( \
 	computerForm.apply("company.id"), \
-    Company.options(), \
-    "Company", \
+	Company.options(), \
+	"Company", \
 	"- Choose a company -" \
 )
-</pre> 
+</code></pre> 
 
-h5. Summary
+h4. Summary
 
 Java compiler is a very fast machine comapred with Scala compiler, almost 10x faster. Japid makes deveoping Java Play application a breeze. 
 
