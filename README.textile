@@ -246,7 +246,6 @@ Let's take a look at the list.html, which is the default view script of the list
         </div>
         
     @} else {
-        
         <table class="computers zebra-striped">
             <thead>
                 <tr>
@@ -320,6 +319,7 @@ Let's take a look at the list.html, which is the default view script of the list
 Notes:
 
 h5. Parameter list
+
 <pre>
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
 </pre> 
@@ -458,9 +458,9 @@ The ending brace must be led with an @ sign too, unlike the Scala engine of Play
 The if statement has a minimalism version, if it suits your taste:
 <pre>
 @if flash.containsKey("success")
-	...
+	//
 @else
-	...
+	//
 @
 </pre>
 
@@ -469,14 +469,14 @@ h5. For Looping
 You can use whatever looping syntax that fits your need best in Java. I'm using a for loop in the list.html:
 <pre>
 @for(Computer computer : currentPage.getList()) {
-	...
+	//
 @}
 </pre>
 
 The for loop has a minimalistic version too:
 <pre>
 @for Computer computer : currentPage.getList()
-	...
+	//
 @
 </pre>
 There is very good reason to use the shorter version: it makes available a bunch of predefined variables associated with the current loop:
@@ -490,6 +490,7 @@ There is very good reason to use the shorter version: it makes available a bunch
     is last? $_isLast
 @
 </pre>
+
 The _size and _index are of integer type. The others are of boolean type. 
 
 h5. Format and a bunch of utility methods 
