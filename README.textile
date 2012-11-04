@@ -163,9 +163,12 @@ public class Application extends JapidController {
 }
 </pre>
 As you can see, using japid in controllers is a simple replacement of explicit invocation of the scala view class with renderJapid(...) or renderJapidWith("japid script name", ...). 
+
 The renderJapid() method looks for a japid script in a folder rooted in "japidroot/japidviews", the structure of which is parallel to the package/class structure of the controllers. 
+
 The renderJapidWith() method take the name of the japid script as the first parameter. I put an "@" in front of the script name, to indicate that the script is in the same folder as the "default" japid script, otherwise I need to specify the script with the full path starting with "japidviews", such as "japidviews/Application/edit.html".  
-Either method returns an instance of Result, which is a valid object to return from the actions. It's also a valid object to wrap in ok(), badRequest() calls, which will handle the headers properly.
+
+Either method returns an instance of Play *Result*, which is a valid object to return from the actions. It's also a valid object to wrap in ok(), badRequest() calls, which will handle the headers properly.
 
 It's important to note that since Japid comes with its own compiler and class loader that uses Play's classloader as the parent classloader, not the other way around, controllers cannot reference the japid views directly while views can reference models and controllers.  
     
@@ -182,11 +185,6 @@ Let's take a look at the list.html, which is the default view script of the list
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
 
 @extends main("List all the computers")
-
-*{
-	Helper generating navigation links. We also have the same method defined in the Application
-	controller to demo the flexibility.
-}*
 
 @def link(Integer newPage, String newSortBy)
 	%{
@@ -210,10 +208,6 @@ Let's take a look at the list.html, which is the default view script of the list
 	    
 	}%
 @
-
-*{
-	Helper generating table headers
-}*
 
 @def header (String key, String title)
     <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp" : ""}">
@@ -375,14 +369,14 @@ In fact japid can use a regular template as a layout, just like in the Play 2.
 
 h5. The comments
 
-Comments are wrapped in *{ }*
-<pre>
+Comments are wrapped in <code>*{ }*</code>
+<pre><code>
 *{
 I have a lot to say
 }*
 
 @// one liner comment, just like Java.
-</pre>
+</code></pre>
 
 h5. Local function
 
