@@ -76,6 +76,11 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 3
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
+
+	public static cn.bran.japid.template.RenderResult apply(Field fld,Map<String, String> options,String label,String defaultVal) {
+		return new select().render(fld, options, label, defaultVal);
+	}
+
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------

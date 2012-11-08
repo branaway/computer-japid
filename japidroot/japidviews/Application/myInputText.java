@@ -98,7 +98,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		p(fld.name());// line 8
 		p("\" value=\"");// line 8
 		p(fld.value());// line 8
-		p("\" >\n" + 
+		p("\" />\n" + 
 "	        <span class=\"help-inline\">");// line 8
 		p(Forms.fieldSpecs(fld));// line 9
 		p("</span> \n" + 

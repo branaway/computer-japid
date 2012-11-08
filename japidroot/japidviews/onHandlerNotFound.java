@@ -69,6 +69,11 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
+
+	public static cn.bran.japid.template.RenderResult apply(play.mvc.Http.RequestHeader rh) {
+		return new onHandlerNotFound().render(rh);
+	}
+
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------

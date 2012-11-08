@@ -91,40 +91,39 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "        \n" + 
 "            ");// line 7
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称"); // line 10// line 10
-		p("            \n" + 
-"            ");// line 10
-		p("			");// line 14
+		p("            \n");// line 10
+		p("			");// line 15
 		p(myInputText.apply(
 				computerForm.apply("introduced"), 
 				"Introduced Date"
 				)
-			);// line 15
-		;// line 19
+			);// line 16
+		;// line 20
 		p("			\n" + 
 "\n" + 
-"            ");// line 22
-		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 24
+"            ");// line 23
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 25
 		p("\n" + 
-"            ");// line 24
-		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 26// line 26
+"            ");// line 25
+		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 27// line 27
 		p("        \n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Save this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 31
-		p(routes.Application.index());// line 37
+"            <a href=\"");// line 32
+		p(routes.Application.index());// line 38
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
 "        \n" + 
 "    </form>\n" + 
 "\n" + 
-"    <form method=\"POST\" action=\"");// line 37
-		p(routes.Application.delete(id));// line 42
+"    <form method=\"POST\" action=\"");// line 38
+		p(routes.Application.delete(id));// line 43
 		p("\" class=\"topRight\">\n" + 
 "    	<input type=\"submit\" value=\"Delete this computer\" class=\"btn danger\">\n" + 
 "    </form>\n" + 
-"    ");// line 42
+"    ");// line 43
 		
 		endDoLayout(sourceTemplate);
 	}

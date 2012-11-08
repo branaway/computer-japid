@@ -69,13 +69,18 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		try {super.layout("Add a computer");} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
+
+	public static cn.bran.japid.template.RenderResult apply(Form<Computer> computerForm) {
+		return new createForm().render(computerForm);
+	}
+
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
 ;// line 1
 		p("\n" + 
 "\n");// line 1
-		p("    <h1>Add a Computer/Japid</h1>\n" + 
+		p("    <h1>Add a Computer</h1>\n" + 
 "    \n" + 
 "    <form method=\"POST\" action=\"");// line 3
 		p(routes.Application.save());// line 7

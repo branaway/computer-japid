@@ -12,6 +12,7 @@ public class Global extends GlobalSettings {
     @Override
 	public void onStart(Application app) {
 	JapidRenderer.init(app);
+	JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
 	// there are more customization you can do to Japid
 	//JapidRenderer.addImportStatic(StringUtils.class);
 	//JapidRenderer.setLogVerbose(true);
