@@ -11,7 +11,7 @@ It demonstrates:
 - Achieving, table pagination and CRUD forms.
 - Rendering data with Japid. 
 
-japid42 is a pure java template engine specifically designed for programming Java web applications for Play 2.0x series. It's hosted at:  http://github.com/branaway/japid42/issues
+japid42 is a pure java template engine specifically designed for programming Java web applications for Play 2.0x series. It's hosted at:  http://github.com/branaway/japid42
 It offers extremely fast script change and reloading. Roughly the default Scala based rendering engine is 10x slower in reloading a changed view. Changes in templates will never trigger an application reload.  
 
  
