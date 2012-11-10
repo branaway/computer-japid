@@ -9,6 +9,7 @@ import play.i18n.Lang;
 import play.data.Form;
 import play.data.Form.Field;
 import play.mvc.Http.Request;
+import japidviews.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
 import play.mvc.Http.Flash;

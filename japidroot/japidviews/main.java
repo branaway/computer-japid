@@ -1,4 +1,4 @@
-package japidviews.Application;
+package japidviews;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
@@ -8,6 +8,7 @@ import play.i18n.Lang;
 import play.data.Form;
 import play.data.Form.Field;
 import play.mvc.Http.Request;
+import japidviews.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
 import play.mvc.Http.Flash;
@@ -16,12 +17,12 @@ import java.util.*;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 //
-// NOTE: This file was generated from: japidviews/Application/main.html
+// NOTE: This file was generated from: japidviews/main.html
 // Change to this file will be lost next time the template file is compiled.
 //
 public abstract class main extends cn.bran.play.JapidTemplateBase
 {
-	public static final String sourceTemplate = "japidviews/Application/main.html";
+	public static final String sourceTemplate = "japidviews/main.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
 		setContentType("text/html; charset=utf-8");

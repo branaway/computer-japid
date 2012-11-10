@@ -8,6 +8,7 @@ import play.i18n.Lang;
 import play.data.Form;
 import play.data.Form.Field;
 import play.mvc.Http.Request;
+import japidviews.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
 import play.mvc.Http.Flash;
@@ -19,11 +20,12 @@ import controllers.*;
 // NOTE: This file was generated from: japidviews/foo/Application/index.html
 // Change to this file will be lost next time the template file is compiled.
 //
-public class index extends cn.bran.play.JapidTemplateBase
+public class index extends main
 {
 	public static final String sourceTemplate = "japidviews/foo/Application/index.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
+		putHeader("Server", "nginx/0.8.26");
 		setContentType("text/html; charset=utf-8");
 	}
 
@@ -66,7 +68,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	public cn.bran.japid.template.RenderResult render(String s) {
 		this.s = s;
 		long __t = -1;
-		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 1
+		try {super.layout("foooo");} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 
@@ -78,10 +80,10 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		beginDoLayout(sourceTemplate);
 //------
 ;// line 1
-		p("\n" + 
-"hey japid in sub project -- ");// line 1
-		p(escape(s));// line 2
-		p("\n");// line 2
+		p("\n");// line 1
+p("nice...Got you: ");// line 3
+		p(escape(s));// line 5
+		;// line 5
 		
 		endDoLayout(sourceTemplate);
 	}
