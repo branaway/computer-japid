@@ -1,20 +1,24 @@
-@(Form<Computer> computerForm)
+`(Form<Computer> computerForm)
 
-@extends main("Add a computer")
+`extends main("Add a computer")
 
     <h1>Add a Computer</h1>
     
     <form method="POST" action="$routes.Application.save()">
         <fieldset>
-            @t myInputText(computerForm.apply("name"), "Computer name")
-            @t myInputText(computerForm.apply("introduced"), "Introduced date")
+`// standard tag invocation
+            `t myInputText(computerForm.apply("name"), "Computer name")
             
-            *{ let's take another approach: include a controller action here }*
+`// invoke tag's apply method directly
+            $myInputText.apply(computerForm.apply("introduced"), "Introduced Date")
+            
+`// let's take another approach: include a controller action here 
+    
             $Application.inputText(computerForm.apply("discontinued"), "Discontinued date")
             
-*{tag invocation must complete in one line. Thus we use a back-slash as the line continuator }*
+	*{tag invocation must complete in one line. Thus we use a back-slash as the line continuator }*
 
-            @t select( \
+            `t select( \
             	computerForm.apply("company.id"), \
                 Company.options(), \
                 "Company", \
@@ -30,3 +34,4 @@
         </div>
     </form>
 
+`t bar

@@ -20,7 +20,7 @@ import controllers.*;
 // NOTE: This file was generated from: japidviews/foo/Application/index.html
 // Change to this file will be lost next time the template file is compiled.
 //
-public class index extends main
+public class index extends cn.bran.play.JapidTemplateBase
 {
 	public static final String sourceTemplate = "japidviews/foo/Application/index.html";
 	{
@@ -68,7 +68,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	public cn.bran.japid.template.RenderResult render(String s) {
 		this.s = s;
 		long __t = -1;
-		try {super.layout("foooo");} catch (RuntimeException e) { super.handleException(e);} // line 1
+		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 
@@ -81,6 +81,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 //------
 ;// line 1
 		p("\n");// line 1
+		//extends main("foooo")// line 2
 p("nice...Got you: ");// line 3
 		p(escape(s));// line 5
 		;// line 5
