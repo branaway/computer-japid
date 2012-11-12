@@ -123,8 +123,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		p(routes.Application.delete(id));// line 43
 		p("\" class=\"topRight\">\n" + 
 "    	<input type=\"submit\" value=\"Delete this computer\" class=\"btn danger\">\n" + 
-"    </form>\n" + 
-"    ");// line 43
+"    </form>\n");// line 43
 		
 		endDoLayout(sourceTemplate);
 	}

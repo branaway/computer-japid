@@ -110,10 +110,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		p(routes.Application.index());// line 33
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
-"    </form>\n" + 
-"\n");// line 33
-		final bar _bar2 = new bar(getOut()); _bar2.setActionRunners(getActionRunners()).setOut(getOut()); _bar2.render(); // line 37// line 37
-		;// line 37
+"    </form>\n");// line 33
 		
 		endDoLayout(sourceTemplate);
 	}

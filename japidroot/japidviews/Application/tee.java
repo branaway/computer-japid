@@ -1,4 +1,4 @@
-package japidviews.foo.Application;
+package japidviews.Application;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
@@ -17,15 +17,14 @@ import java.util.*;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 //
-// NOTE: This file was generated from: japidviews/foo/Application/index.html
+// NOTE: This file was generated from: japidviews/Application/tee.html
 // Change to this file will be lost next time the template file is compiled.
 //
-public class index extends cn.bran.play.JapidTemplateBase
+public class tee extends cn.bran.play.JapidTemplateBase
 {
-	public static final String sourceTemplate = "japidviews/foo/Application/index.html";
+	public static final String sourceTemplate = "japidviews/Application/tee.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
-		putHeader("Server", "nginx/0.8.26");
 		setContentType("text/html; charset=utf-8");
 	}
 
@@ -42,18 +41,18 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 // - end of implicit fields with Play 
 
 
-	public index() {
+	public tee() {
 		super(null);
 	}
-	public index(StringBuilder out) {
+	public tee(StringBuilder out) {
 		super(out);
 	}
 /* based on https://github.com/branaway/Japid/issues/12
  */
-	public static final String[] argNames = new String[] {/* args of the template*/"c",  };
-	public static final String[] argTypes = new String[] {/* arg types of the template*/"Calc",  };
-	public static final Object[] argDefaults= new Object[] {null, };
-	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.foo.Application.index.class);
+	public static final String[] argNames = new String[] {/* args of the template*/ };
+	public static final String[] argTypes = new String[] {/* arg types of the template*/ };
+	public static final Object[] argDefaults= new Object[] { };
+	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.Application.tee.class);
 
 	{
 		setRenderMethod(renderMethod);
@@ -64,28 +63,20 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	}
 ////// end of named args stuff
 
-	private Calc c; // line 1
-	public cn.bran.japid.template.RenderResult render(Calc c) {
-		this.c = c;
+	public cn.bran.japid.template.RenderResult render() {
 		long __t = -1;
-		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 1
+		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} 
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 
-	public static cn.bran.japid.template.RenderResult apply(Calc c) {
-		return new index().render(c);
+	public static cn.bran.japid.template.RenderResult apply() {
+		return new tee().render();
 	}
 
 	@Override protected void doLayout() {
 		beginDoLayout(sourceTemplate);
 //------
-;// line 1
-		p("\n");// line 1
-		p("nice...Got you: ");// line 2
-		p(escape(c.name));// line 4
-		p(" at ");// line 4
-		p("$" + c.price);// line 4
-		p(", which is not bad. \n");// line 4
+p("teeee");// line 1
 		
 		endDoLayout(sourceTemplate);
 	}

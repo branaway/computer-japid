@@ -18,12 +18,12 @@ import java.util.*;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 //
-// NOTE: This file was generated from: japidviews/Application/inputText.html
+// NOTE: This file was generated from: japidviews/Application/myInputText.html
 // Change to this file will be lost next time the template file is compiled.
 //
-public class inputText extends cn.bran.play.JapidTemplateBase
+public class myInputText extends cn.bran.play.JapidTemplateBase
 {
-	public static final String sourceTemplate = "japidviews/Application/inputText.html";
+	public static final String sourceTemplate = "japidviews/Application/myInputText.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
 		setContentType("text/html; charset=utf-8");
@@ -42,18 +42,18 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 // - end of implicit fields with Play 
 
 
-	public inputText() {
+	public myInputText() {
 		super(null);
 	}
-	public inputText(StringBuilder out) {
+	public myInputText(StringBuilder out) {
 		super(out);
 	}
 /* based on https://github.com/branaway/Japid/issues/12
  */
-	public static final String[] argNames = new String[] {/* args of the template*/"name", "value", "label", "info", "hasError",  };
-	public static final String[] argTypes = new String[] {/* arg types of the template*/"String", "String", "String", "String", "boolean",  };
-	public static final Object[] argDefaults= new Object[] {null,null,null,null,null, };
-	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.Application.inputText.class);
+	public static final String[] argNames = new String[] {/* args of the template*/"fld", "label",  };
+	public static final String[] argTypes = new String[] {/* arg types of the template*/"Field", "String",  };
+	public static final Object[] argDefaults= new Object[] {null,null, };
+	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.Application.myInputText.class);
 
 	{
 		setRenderMethod(renderMethod);
@@ -64,24 +64,18 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	}
 ////// end of named args stuff
 
-	private String name; // line 3
-	private String value; // line 3
+	private Field fld; // line 3
 	private String label; // line 3
-	private String info; // line 3
-	private boolean hasError; // line 3
-	public cn.bran.japid.template.RenderResult render(String name,String value,String label,String info,boolean hasError) {
-		this.name = name;
-		this.value = value;
+	public cn.bran.japid.template.RenderResult render(Field fld,String label) {
+		this.fld = fld;
 		this.label = label;
-		this.info = info;
-		this.hasError = hasError;
 		long __t = -1;
 		try {super.layout();} catch (RuntimeException e) { super.handleException(e);} // line 3
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 
-	public static cn.bran.japid.template.RenderResult apply(String name,String value,String label,String info,boolean hasError) {
-		return new inputText().render(name, value, label, info, hasError);
+	public static cn.bran.japid.template.RenderResult apply(Field fld,String label) {
+		return new myInputText().render(fld, label);
 	}
 
 	@Override protected void doLayout() {
@@ -89,29 +83,29 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 //------
 ;// line 1
 		;// line 1
-		p("<div class=\"clearfix ");// line 3
-		p(hasError ? "error" : "");// line 4
+		p("\n" + 
+"<div class=\"clearfix ");// line 3
+		p(Forms.hasError(fld) ? "error" : "");// line 5
 		p("\">\n" + 
-"    <label for=\"");// line 4
-		p(name);// line 5
-		p("\">");// line 5
-		p(label);// line 5
+"    <label for=\"");// line 5
+		p(fld.name());// line 6
+		p("\">");// line 6
+		p(label);// line 6
 		p("</label>\n" + 
 "    <div class=\"input\">\n" + 
 "        \n" + 
-"    <input type=\"text\" id=\"");// line 5
-		p(name);// line 8
-		p("\" name=\"");// line 8
-		p(name);// line 8
-		p("\" value=\"");// line 8
-		p(escape(value));// line 8
-		p("\" >\n" + 
-"        <span class=\"help-inline\">");// line 8
-		p(escape(info));// line 9
+"    <input type=\"text\" id=\"");// line 6
+		p(fld.name());// line 9
+		p("\" name=\"");// line 9
+		p(fld.name());// line 9
+		p("\" value=\"");// line 9
+		p(fld.value());// line 9
+		p("\" />\n" + 
+"        <span class=\"help-inline\">");// line 9
+		p(Forms.fieldSpecs(fld));// line 10
 		p("</span> \n" + 
 "    </div>\n" + 
-"</div>\n" + 
-"\n");// line 9
+"</div>\n");// line 10
 		
 		endDoLayout(sourceTemplate);
 	}
