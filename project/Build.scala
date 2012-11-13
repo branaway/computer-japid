@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
 
     val appDependencies = Seq(
       "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final"
-      ,"japid42" % "japid42_2.9.1" % "0.6"
+      ,"japid42" % "japid42_2.9.1" % "0.6.1"
     )
 
     val foo = PlayProject("foo", "0.1", appDependencies, path = file("modules/foo")).settings(

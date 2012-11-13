@@ -2,7 +2,7 @@
 @extends main("Edit A Computer")
 
     
-    <h1>Edit computer/Japid</h1>
+    <h1>Edit: ${computerForm.apply("name").value()}</h1>
     
     <form method="POST" action="$routes.Application.update(id)">
         <fieldset>
@@ -11,7 +11,8 @@
             
 *{ 
  	alternatively we call a tag using the apply method in ${   } syntax
-    This form allows argument list spanning multiple lines
+    This form allows argument list spanning multiple lines. Of course you can do without the braces if it fits in one line
+    $myInputText.apply(computerForm.apply("introduced"), "Introduced Date/上市时间")
 }*
 			${myInputText.apply(
 				computerForm.apply("introduced"), 

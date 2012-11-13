@@ -83,9 +83,11 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 ;// line 1
 		p("\n");// line 1
 		p("    \n" + 
-"    <h1>Edit computer/Japid</h1>\n" + 
+"    <h1>Edit: ");// line 2
+		p(computerForm.apply("name").value());// line 5
+		p("</h1>\n" + 
 "    \n" + 
-"    <form method=\"POST\" action=\"");// line 2
+"    <form method=\"POST\" action=\"");// line 5
 		p(routes.Application.update(id));// line 7
 		p("\">\n" + 
 "        <fieldset>\n" + 
@@ -93,37 +95,37 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "            ");// line 7
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称/Name"); // line 10// line 10
 		p("            \n");// line 10
-		p("			");// line 15
+		p("			");// line 16
 		p(myInputText.apply(
 				computerForm.apply("introduced"), 
 				"Introduced Date"
 				)
-			);// line 16
-		;// line 20
+			);// line 17
+		;// line 21
 		p("			\n" + 
 "\n" + 
-"            ");// line 23
-		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 25
+"            ");// line 24
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued Date"));// line 26
 		p("\n" + 
-"            ");// line 25
-		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 27// line 27
+"            ");// line 26
+		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 28// line 28
 		p("        \n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Save this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 32
-		p(routes.Application.index());// line 38
+"            <a href=\"");// line 33
+		p(routes.Application.index());// line 39
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
 "        \n" + 
 "    </form>\n" + 
 "\n" + 
-"    <form method=\"POST\" action=\"");// line 38
-		p(routes.Application.delete(id));// line 43
+"    <form method=\"POST\" action=\"");// line 39
+		p(routes.Application.delete(id));// line 44
 		p("\" class=\"topRight\">\n" + 
 "    	<input type=\"submit\" value=\"Delete this computer\" class=\"btn danger\">\n" + 
-"    </form>\n");// line 43
+"    </form>\n");// line 44
 		
 		endDoLayout(sourceTemplate);
 	}
