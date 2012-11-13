@@ -1,4 +1,4 @@
-package japidviews;
+package japidviews.Application;
 import java.util.*;
 import java.io.*;
 import cn.bran.japid.tags.Each;
@@ -18,12 +18,12 @@ import java.util.*;
 import static cn.bran.japid.util.WebUtils.*;
 import controllers.*;
 //
-// NOTE: This file was generated from: japidviews/select.html
+// NOTE: This file was generated from: japidviews/Application/select.html
 // Change to this file will be lost next time the template file is compiled.
 //
 public class select extends cn.bran.play.JapidTemplateBase
 {
-	public static final String sourceTemplate = "japidviews/select.html";
+	public static final String sourceTemplate = "japidviews/Application/select.html";
 	{
 		putHeader("Content-Type", "text/html; charset=utf-8");
 		setContentType("text/html; charset=utf-8");
@@ -53,7 +53,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 	public static final String[] argNames = new String[] {/* args of the template*/"fld", "options", "label", "defaultVal",  };
 	public static final String[] argTypes = new String[] {/* arg types of the template*/"Field", "Map<String, String>", "String", "String",  };
 	public static final Object[] argDefaults= new Object[] {null,null,null,null, };
-	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.select.class);
+	public static java.lang.reflect.Method renderMethod = getRenderMethod(japidviews.Application.select.class);
 
 	{
 		setRenderMethod(renderMethod);
