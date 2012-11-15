@@ -154,5 +154,7 @@ public class Application extends JapidController {
 		return routes.Application.list(newPage, sortBy, order, currentFilter)
 				.url();
 	}
+	
+	void foo() {}
 }
             

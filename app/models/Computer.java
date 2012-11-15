@@ -1,13 +1,19 @@
 package models;
 
-import java.util.*;
-import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
-import play.db.ebean.*;
-import play.data.format.*;
-import play.data.validation.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
-import play.db.jpa.*;
+import play.data.format.Formats;
+import play.data.validation.Constraints;
+import play.db.jpa.JPA;
 
 /**
  * Computer entity managed by JPA
@@ -31,7 +37,7 @@ public class Computer {
     
     @ManyToOne(cascade = CascadeType.MERGE)
     public Company company;
-    
+   
     /**
      * Find a company by id.
      */
@@ -61,7 +67,6 @@ public class Computer {
         } else {
             this.company = Company.findById(company.id);
         }
-        this.id = id;
         JPA.em().persist(this);
     }
     

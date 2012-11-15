@@ -73,7 +73,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		this.currentOrder = currentOrder;
 		this.currentFilter = currentFilter;
 		long __t = -1;
-		try {super.layout("List All the Computers");} catch (RuntimeException e) { super.handleException(e);} // line 1
+		try {super.layout("List All");} catch (RuntimeException e) { super.handleException(e);} // line 1
 		return new cn.bran.japid.template.RenderResultPartial(getHeaders(), getOut(), __t, actionRunners, sourceTemplate);
 	}
 
