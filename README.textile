@@ -38,7 +38,7 @@ object ApplicationBuild extends Build {
     val appVersion      = "1.0"
     val appDependencies = Seq(
       "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
-      "japid42" % "japid42_2.9.1" % "0.6.1"
+      "japid42" % "japid42_2.9.1" % "0.7"
     )
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
       ebeanEnabled := false,
@@ -63,11 +63,14 @@ import play.mvc.Results;
 import cn.bran.japid.template.JapidRenderer;
 import cn.bran.play.JapidController;
 
-public class Global extends GlobalSettings {
-    @Override
-	public void onStart(Application app) {
-		JapidRenderer.init(app);
-    }
+public class Global extends JapidRenderer {
+	@Override
+	public void onStartJapid() {
+		JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
+		// there are more customization you can do to Japid
+		// JapidRenderer.addImportStatic(StringUtils.class);
+		JapidRenderer.setLogVerbose(true);
+	}
 
 	@Override
 	public Result onError(RequestHeader h, Throwable t) {
@@ -87,6 +90,8 @@ public class Global extends GlobalSettings {
 
 	@Override
 	public Result onHandlerNotFound(RequestHeader r) {
+		// usually one need to use a customized error reporting in production.
+		//
 		if (Play.application().isProd() || Play.application().isDev())
 			return Results.notFound(JapidController.renderJapidWith("onHandlerNotFound.html", r));
 		else
@@ -97,8 +102,8 @@ public class Global extends GlobalSettings {
 
 Note:
 
-# To initialize Japid, call <code>JapidRenderer.init(app);</code> in the onStart method. 
-There are more options that one can configure about Japid, such as the default location of Japid scripts, the interval between file change detections in dev mode and import statement that will be added to all the Japid scripts. 
+# Global must inherit from JapidRenderer. 
+There are more options that one can configure about Japid, such as the default location of Japid scripts, the interval between file change detections in dev mode and import statement that will be added to all the Japid scripts. You can do that in onStartJapid();
 # I have also over-ridden three other methods in this class to provide customized information page when 404, 500 errors are encountered in production. To test these handlers in DEV mode, please adjust the code accordingly in the if statement.
 Check out this line:
 <pre>
@@ -110,7 +115,7 @@ h3. Controllers
 
 The difference between the using Japid and the default Scala-based template engines is:
 
-# Controllers inherit from JapidController instead of the plain Controller. JapidController class is a child class of the Controller class. It adds a bunch of renderJapid(...) and renderJapidWith(...) static methods for the controller to invoke Japid scripts. This is not absolutely required, but is more of a convenient arrangment.  
+# Controllers inherit from JapidController instead of the plain Controller. JapidController class is a child class of the Controller class. It adds a bunch of renderJapid(...) and renderJapidWith(...) static methods for the controller to invoke Japid scripts. This is not absolutely required, but is more of a convenient arrangement.  
 # The default template engine are invoked explicitly in the controllers. i.e., the view classes are statically linked to the controller code. On the other hand, Japid views are always invoked by name. Japid scripts are compiled "On demand".
 
 <pre>

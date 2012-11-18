@@ -55,7 +55,7 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "<!DOCTYPE html>\n" + 
 "<html>\n" + 
 "    <head>\n" + 
-"        <title>Computers Database with Japid 0.6.1 - ");// line 1
+"        <title>Computers database with Japid 0.7 - ");// line 1
 		p(msg);// line 5
 		p("</title>\n" + 
 "        <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"");// line 5

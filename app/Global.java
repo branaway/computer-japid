@@ -7,10 +7,9 @@ import play.mvc.Results;
 import cn.bran.japid.template.JapidRenderer;
 import cn.bran.play.JapidController;
 
-public class Global extends GlobalSettings {
+public class Global extends JapidRenderer {
 	@Override
-	public void onStart(Application app) {
-		JapidRenderer.init(app);
+	public void onStartJapid() {
 		JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
 		// there are more customization you can do to Japid
 		// JapidRenderer.addImportStatic(StringUtils.class);
@@ -42,12 +41,4 @@ public class Global extends GlobalSettings {
 		else
 			return super.onHandlerNotFound(r);
 	}
-
-	@Override
-	public void onStop(Application app) {
-		JapidRenderer.onStop(app);
-		super.onStop(app);
-	}
-
-	
 }
