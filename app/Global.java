@@ -10,10 +10,8 @@ import cn.bran.play.JapidController;
 public class Global extends JapidRenderer {
 	@Override
 	public void onStartJapid() {
-		JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
-		// there are more customization you can do to Japid
-		// JapidRenderer.addImportStatic(StringUtils.class);
-		JapidRenderer.setLogVerbose(true);
+		setTemplateRoot("japidroot", "modules/foo/japidroot");
+		setLogVerbose(false);
 	}
 
 	@Override
