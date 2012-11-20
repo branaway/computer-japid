@@ -86,31 +86,34 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 "    <form method=\"POST\" action=\"");// line 3
 		p(routes.Application.save());// line 7
 		p("\">\n" + 
-"        <fieldset>\n");// line 7
-            final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 10// line 10
-		p("            \n");// line 10
-		p("            ");// line 12
-		p(myInputText.apply(computerForm.apply("introduced"), "Introduced Date"));// line 13
-		p("            \n");// line 13
+"        <fieldset>\n" + 
+"        	");// line 7
+		p(authenticityToken());// line 9
+		;// line 9
+            final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"Computer name"); // line 11// line 11
+		p("            \n");// line 11
+		p("            ");// line 13
+		p(myInputText.apply(computerForm.apply("introduced"), "Introduced Date"));// line 14
+		p("            \n");// line 14
 		p("    \n" + 
-"            ");// line 15
-		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued date"));// line 17
+"            ");// line 16
+		p(Application.inputText(computerForm.apply("discontinued"), "Discontinued date"));// line 18
 		p("            \n" + 
-"	");// line 17
+"	");// line 18
 		p("\n" + 
-"            ");// line 19
-		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 21// line 21
+"            ");// line 20
+		final select _select1 = new select(getOut()); _select1.setActionRunners(getActionRunners()).setOut(getOut()); _select1.render(computerForm.apply("company.id"),Company.options(),"Company","- Choose a company -"); // line 22// line 22
 		p("            \n" + 
 "\n" + 
 "        </fieldset>\n" + 
 "        \n" + 
 "        <div class=\"actions\">\n" + 
 "            <input type=\"submit\" value=\"Create this computer\" class=\"btn primary\"> or \n" + 
-"            <a href=\"");// line 26
-		p(routes.Application.index());// line 33
+"            <a href=\"");// line 27
+		p(routes.Application.index());// line 34
 		p("\" class=\"btn\">Cancel</a> \n" + 
 "        </div>\n" + 
-"    </form>\n");// line 33
+"    </form>\n");// line 34
 		
 		endDoLayout(sourceTemplate);
 	}

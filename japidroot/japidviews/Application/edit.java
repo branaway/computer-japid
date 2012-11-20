@@ -91,8 +91,9 @@ boolean hasHttpContext = play.mvc.Http.Context.current.get() != null ? true : fa
 		p(routes.Application.update(id));// line 7
 		p("\">\n" + 
 "        <fieldset>\n" + 
-"        \n" + 
-"            ");// line 7
+"        	");// line 7
+		p(authenticityToken());// line 9
+		p("            ");// line 9
 		final myInputText _myInputText0 = new myInputText(getOut()); _myInputText0.setActionRunners(getActionRunners()).setOut(getOut()); _myInputText0.render(computerForm.apply("name"),"名称/Name"); // line 10// line 10
 		p("            \n");// line 10
 		p("			");// line 16

@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import cn.bran.japid.template.AuthenticityCheck;
+
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
@@ -20,6 +22,7 @@ import play.db.jpa.JPA;
  */
 @Entity 
 @SequenceGenerator(name = "computer_seq", sequenceName = "computer_seq")
+@AuthenticityCheck // match this with a $authenticityToken() expression in your html forms or it will freak out!!
 public class Computer {
 
     @Id
