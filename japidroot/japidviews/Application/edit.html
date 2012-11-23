@@ -6,7 +6,7 @@
     
     <form method="POST" action="$routes.Application.update(id)">
         <fieldset>
-        
+          $authenticityToken()
             @t myInputText(computerForm.apply("name"), "名称/Name")
             
 *{ 
