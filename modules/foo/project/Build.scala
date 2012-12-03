@@ -8,7 +8,7 @@ object ApplicationBuild extends Build {
     val appVersion      = "0.1"
 
     val appDependencies = Seq(
-       "japid42" % "japid42_2.9.1" % "0.6"
+       "japid42" % "japid42_2.9.1" % "0.7.2"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(

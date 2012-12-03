@@ -1,5 +1,3 @@
-import play.Application;
-import play.GlobalSettings;
 import play.Play;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
@@ -11,7 +9,8 @@ public class Global extends JapidRenderer {
 	@Override
 	public void onStartJapid() {
 		setTemplateRoot("japidroot", "modules/foo/japidroot");
-		setLogVerbose(false);
+		setLogVerbose(true);
+		setKeepJavaFiles(false); // keep the Java code derived from Japid scripts in memory only
 	}
 
 	@Override
