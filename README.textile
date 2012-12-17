@@ -419,7 +419,7 @@ Use "def" to define a parameterized template snippet.
 * It ends with a Japid delimiter "@".  
 
 Here are some Japid syntax:
-* %{ ... }%: to include a block of Java code 
+* %%{ ... }%%: to include a block of Java code 
 * the p() method is to print a string value to the current template output stream.
 * $key.replace(".","_"): an expression
 * ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}: a Java expression
