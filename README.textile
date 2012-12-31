@@ -578,7 +578,7 @@ In the above example, one of the parameters is a form of Computer:
 
 Of course you can pass in an instance of Computer directly without wrapping it in a Form. But then you need do the validation yourself. 
 <pre><code>
-@(Long id, Computer> computer)
+@(Long id, Computer computer)
 </code></pre>
 
 To get field of the form, we call Form's *apply(...)* method:
