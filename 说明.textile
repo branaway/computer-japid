@@ -1,0 +1,682 @@
+h1. 一个使用Play 2.0演示Japid渲染引擎的示例
+
+冉兵, 中国 (bing.ran@iclass.com)
+
+
+这是一个经典的CRUD应用，使用JDBC数据库保存数据，Japid42渲染视图。 
+
+演示如下：
+
+- 使用JPA访问JDBC数据库。
+- 实现表格分页和CRUD表单。
+- 使用Japid渲染数据。 
+
+Japid42是一个纯Java开发的模板引擎，用于基于Play 2.0x系列的Java web应用开发，位于：http://github.com/branaway/japid42
+它提供快速的脚本更改和重载能力。而Play2自带的Scala模板引擎在重载视图方面大约慢10倍。模板的更新并不促发整个应用的重载。 
+
+ 
+运行这个示例，请使用play 2.0.4。
+
+# git clone git://github.com/branaway/computer-japid.git
+# cd computer-japid
+# play run
+
+然后可以访问应用地址：http://localhost:9000
+
+h2. 一个Japid应用的文件结构
+
+h3. 依赖项
+
+首先要在build.scala文件中声明对japid的依赖：
+
+<pre>
+import sbt._
+import Keys._
+import PlayProject._
+object ApplicationBuild extends Build {
+    val appName         = "computer-japid"
+    val appVersion      = "1.0"
+    val appDependencies = Seq(
+      "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
+      "japid42" % "japid42_2.9.1" % "0.7.4"
+    )
+    val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+      ebeanEnabled := false,
+      resolvers += Resolver.url("Japid on Github", url("http://branaway.github.com/releases/"))(Resolver.ivyStylePatterns)
+    )
+}
+</pre>
+
+Japid在Github上的库地址被加到resolver链里。然后Japid被加到依赖项列表里。
+
+h3. 初始化Japid
+
+在位于app文件夹的Global.java初始化Japid设置。
+
+<pre>
+import play.Application;
+import play.GlobalSettings;
+import play.Play;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Result;
+import play.mvc.Results;
+import cn.bran.japid.template.JapidRenderer;
+import cn.bran.play.JapidController;
+
+public class Global extends JapidRenderer {
+	@Override
+	public void onStartJapid() {
+		JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
+		// there are more customization you can do to Japid
+		// JapidRenderer.addImportStatic(StringUtils.class);
+		JapidRenderer.setLogVerbose(true);
+	}
+
+	@Override
+	public Result onError(RequestHeader h, Throwable t) {
+		if (Play.application().isProd())
+			return Results.internalServerError(JapidController.renderJapidWith("onError.html", h, t));
+		else
+			return super.onError(h, t);
+	}
+
+	@Override
+	public Result onBadRequest(RequestHeader r, String s) {
+		if (Play.application().isProd())
+			return Results.badRequest(JapidController.renderJapidWith("onBadRequest.html", r, s));
+		else
+			return super.onBadRequest(r, s);
+	}
+
+	@Override
+	public Result onHandlerNotFound(RequestHeader r) {
+		// usually one need to use a customized error reporting in production.
+		//
+		if (Play.application().isProd() || Play.application().isDev())
+			return Results.notFound(JapidController.renderJapidWith("onHandlerNotFound.html", r));
+		else
+			return super.onHandlerNotFound(r);
+	}
+}
+</pre>
+
+注意：
+
+# Global必须继承JapidRenderer。 
+可以对Japid进行更多的设置，比如Japid脚本的默认位置，在开发模式中系统侦测文件修改的频率，以及设置作用于所有的脚本import语句。您可以在onStartJapid()方法中完成这些；
+# 我也重写了三个方法，提供自定义页面来处理生产环境中的404，500错误。如果要在开发模式下测试这些方法，请根据if语句相应地调整代码。
+请看这样代码：
+<pre>
+	return Results.internalServerError(JapidController.renderJapidWith("onError.html", h, t));
+</pre>
+使用JapidController.renderJapidWith("onError.html", h, t)方法产生错误信息。该方法传入了h和t两个参数给位于japidroot/japidviews文件夹的"onError.html"脚本。 
+
+h3. Controllers
+
+使用Japid和自带的Scala模板引擎的区别：
+
+# Controllers继承JapidController，而不是直接继承普通的Controller。JapidController是Controller的子类。它拥有renderJapid(...)和renderJapidWith(...)静态方法使得controller能调用Japid脚本。这虽然不是必须的，但是使用起来更方便。  
+# 默认的模板引擎在controllers中直接被调用。例如，view类的代码会被静态的链接到controller代码中。相反地，Japid views是根据名字被调用的。Japid脚本按需编译。
+
+<pre>
+package controllers;
+import java.util.List;
+import models.Computer;
+import play.data.Form;
+import play.data.Form.Field;
+import play.data.validation.ValidationError;
+import play.db.jpa.Transactional;
+import play.mvc.Result;
+import utils.Forms;
+import cn.bran.play.JapidController;
+// only a few actions are shown
+public class Application extends JapidController {
+    @Transactional(readOnly=true)
+    public static Result list(int page, String sortBy, String order, String filter) {
+    	return renderJapid(Computer.page(page, 10, sortBy, order, filter), sortBy, order, filter);
+    }
+    
+    @Transactional(readOnly=true)
+    public static Result edit(Long id) {
+        Form<Computer> computerForm = form(Computer.class).fill(
+            Computer.findById(id)
+        );
+        return renderJapid(id, computerForm);
+    }
+    
+    @Transactional
+    public static Result update(Long id) {
+        Form<Computer> computerForm = form(Computer.class).bindFromRequest();
+        if(computerForm.hasErrors()) {
+            return badRequest(renderJapidWith("@edit.html", id, computerForm));
+        }
+        computerForm.get().update(id);
+        flash("success", "Computer " + computerForm.get().name + " has been updated.");
+        return GO_HOME;
+    }
+    
+    @Transactional(readOnly=true)
+    public static Result create() {
+        Form<Computer> computerForm = form(Computer.class);
+        return ok(renderJapidWith("@createForm.html", computerForm));
+    }
+// ...    
+}
+</pre>
+正如您看到的，在controllers里通过renderJapid(...)或renderJapidWith("japid脚本名", ...)可以很轻松地使用japid替换scala的view。
+
+renderJapid()方法在位于"japidroot/japidviews"的文件夹中寻找japid脚本。该文件夹的结构与controllers的包/类结构相对应。 
+
+renderJapidWith()方法的第一个参数是japid脚本的文件名。在脚本名之前冠以"@"，意味着该脚本与缺省脚本位于同一文件夹中，否则我需要指定以"japidviews"开头的全路径，比如"japidviews/Application/edit.html"。 
+
+两个方法都返回Play *Result*的一个实例，然后作为一个有效对象从actions中返回。 这个对象也能被包裹在ok(),badRequest()方法中，从而达到合理添加headers的目的。
+
+需要非常注意的是，japid自带编译器和以Play的类加载器作为父加载器的类加载器，controllers不能直接引用japid views，而views可以引用modes和controllers。  
+    
+
+h3. 在Japid脚本中数据渲染
+
+所有的脚本都放在"japidroot/japidviews"文件夹中。而 "japidroot"可以通过JapidRender.setTemplateRoot(...)设置。
+
+脚本根目录的结构是与controller目录结构平行的,action名字对应于脚本文件名，而action所在的controller的类名对应于脚本文件所在的文件夹名。 
+
+让我们看下list.html，它是list(...) action对应的view脚本。这个脚本内容有点长。。。
+
+<pre>
+@(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
+
+@extends main("List all the computers")
+
+@def link(Integer newPage, String newSortBy)
+	%{
+		String sortBy = currentSortBy;
+	    String order = currentOrder;
+	    
+	    if(newSortBy != null) {
+	        sortBy = newSortBy;
+	        if(currentSortBy == newSortBy) {
+	            if(currentOrder == "asc") {
+	                order = "desc";
+	            } else {
+	                order = "asc";
+	            }
+	        } else {
+	            order = "asc";
+	        }
+	    }
+	    // Generate the link
+	    p(routes.Application.list(newPage, sortBy, order, currentFilter));
+	    
+	}%
+@
+
+@def header (String key, String title)
+    <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp" : ""}">
+        <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
+    </th>
+@
+
+
+    <h1 id="homeTitle">
+    
+    $getMessage("computers.list.title", currentPage.getTotalRowCount())
+    
+    </h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> $flash.get("success")
+        </div>
+    @} 
+
+    <div id="actions">
+        
+        <form action="$Application.link(currentSortBy, currentOrder, currentFilter, 0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="$currentFilter" placeholder="Filter by computer name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+        
+        <a class="btn success" id="add" href="$routes.Application.create()">Add a new computer</a>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount() == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    @} else {
+        <table class="computers zebra-striped">
+            <thead>
+                <tr>
+                    $header("name", "Computer name")
+                    $header("introduced", "Introduced")
+                    $header("discontinued", "Discontinued")
+                    $header("company.name", "Company")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(Computer computer : currentPage.getList()) {
+                    <tr>
+                        <td><a href="$routes.Application.edit(computer.id)">$computer.name</a></td>
+                        <td>
+                            @if(computer.introduced == null) {
+                                <em>-</em>
+                            @} else {
+                                $format(computer.introduced, "dd MMM yyyy")
+                            @}
+                        </td>
+                        <td>
+                            @if(computer.discontinued == null) {
+                                <em>-</em>
+                            @} else {
+                               	$format(computer.discontinued, "dd MMM yyyy")
+                            @}
+                        </td>
+                        <td>
+                            @if(computer.company == null) {
+                                <em>-</em>
+                            @} else {
+                                $computer.company.name
+                            @}
+                        </td>
+                    </tr>
+                @}
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev()) {
+                    <li class="prev">
+                        <a href="$link(currentPage.getPageIndex() - 1, null)">&larr; Previous</a>
+                    </li>
+                @} else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                @}
+                <li class="current">
+                    <a>Displaying $currentPage.getDisplayXtoYofZ()</a>
+                </li>
+                @if(currentPage.hasNext()) {
+                    <li class="next">
+                        <a href="$link(currentPage.getPageIndex() + 1, null)">Next &rarr;</a>
+                    </li>
+                @} else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                @}
+            </ul>
+        </div>
+        
+    @}
+</pre>
+
+注意：
+
+h4. 参数列表
+
+<pre>
+@(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
+</pre> 
+
+如您所见，和scala模板一样，只不过以Java的方式声明：类型名加对象名。
+可以跨行。
+
+h4. 布局
+
+通过关键字extends继承一个页面的布局。
+
+<pre>
+@extends main("...")
+</pre>
+
+需要注意一个概念，Japid有"layout"的概念，它继承自Play 1。在Play 2中，从支持闭包开始，这个概念从被整合到标准的模板中。
+值得高兴的是整个脚本不需要被包裹在一对巨大的括号里。
+
+这个布局在main.html文件里，这边就不展示了。
+
+注意：
+# 一个布局可以由多个参数，就像一般的模板一样。
+# 在html代码中使用"$"获取表达式的值。可以是$expr或${expr}。后者看起来更清晰，并且允许表达式跨行。而前者简短，但是局限于一行内。
+# HTML的安全表达式通过冠以"~"或"~{}"实现。如果你不确定某个表达式的自然形式，冠以"~"替换"$"于表达式前。
+# Play2通过一个简单的调用实现反向URL查询 。因此在Japid中只是一个表达式:
+<pre><code>
+$routes.Assets.at("stylesheets/bootstrap.min.css")
+or:
+$routes.Application.index()
+</code></pre>
+# 要集成本模板的内容，需要在父模板内使用@doLayout.
+
+事实上japid能使用普通的模板作为一个布局，同Play2里的用法一样。
+
+<pre><code>
+@t myMain("the title") |
+   the rest of the body
+@
+</code></pre>
+
+* 符号"@t"用来调用其他模板。有时那些模板被称为"tags"，其实一个tag与一个模板确实没有什么区别。任何普通模板都能够像tag一样使用。
+* "myMain"脚本和main.html脚本几乎一样，只是前者使用@doBody而不是@doLayout。 
+* 一行的结尾必须是竖杠。后面还可以跟多个参数。  
+* 整个调用代码必须以符号"@"结束。
+
+h4. 注释
+
+注释被包裹在<code>*{ }*</code>中
+<pre><code>
+*{
+I have a lot to say
+}*
+
+@// one liner comment, just like Java.
+</code></pre>
+
+h4. 本地方法
+
+使用"def"定义一个参数化的模板片段。
+
+<pre><code>
+@def link(Integer newPage, String newSortBy)
+ %{
+	String sortBy = currentSortBy;
+    String order = currentOrder;
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy;
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc";
+            } else {
+                order = "asc";
+            }
+        } else {
+            order = "asc";
+        }
+    }
+      // Generate the link
+    p(routes.Application.list(newPage, sortBy, order, currentFilter));
+    
+ }%
+    
+@
+
+
+@def header (String key, String title)
+    <th class="$key.replace(".","_") header ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}">
+        <a href="$Application.link(currentSortBy, currentOrder, currentFilter, 0, key)">~title</a>
+    </th>
+@
+</code></pre>
+
+* 模板片段只对当前模板可见。它包含的这段模板能够被在这一个文件中其他代码调用多次，传不同的参数。
+* 可以访问这个Japid脚本的全局参数。 
+* 必须以Japid分隔符"@"结束。  
+
+以下是Japid的语法：
+* %%{ ... }%%： 用来包含一块Java代码。 
+* p()用来将一个字符串打印到当前模板的输出流。
+* $key.replace(".","_")：一种合法的表达方式。
+* ${currentSortBy.equals(key) ? (currentOrder.equals("asc") ? "headerSortDown" : "headerSortUp") : ""}：一种合法的Java表达式。
+* $Application.link(currentSortBy, currentOrder, currentFilter, 0, key)：一种Java表达式。这个link方法是Application类里的一个静态方法。和之前描述的方法效果一样，只是换种表达方法而已。  
+
+要使用本地的模板片段，只要简单的在表达式里调用：
+
+<pre>
+	the header: $header("name", "Computer name")
+	the link: $link(currentPage.getPageIndex() - 1, null)
+</pre>
+
+h4. 国际化
+
+$getMessage(...)方法通过当前语言设置来格式化字符串。Play2使用文档有更多说明。 
+<pre><code>
+	$getMessage("computers.list.title", currentPage.getTotalRowCount())
+</code></pre>
+
+h4. If语句
+
+<pre>
+   @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> $flash.get("success")
+        </div>
+   @} 
+</pre>
+
+这是一个普通的Java语法。记住：以@作为一行Java代码的开头，除非一些特殊的以 @开头的预定义的指令。 
+
+不像Play2中的Scala引擎，结束的右括号前也要有@标记。虽然看上去Japid不足够聪明地去识别符号"}"，我还是情愿让解析器更健壮。 
+
+下面的if语句是一个简化版本，或许更适合您的口味：
+<pre><code>
+@if flash.containsKey("success")
+	//
+@else
+	//
+@
+</code></pre>
+
+h4. For循环 
+
+你可以使用任何Java里面的循环语句。我在list.html使用了for循环：
+<pre><code>
+@for(Computer computer : currentPage.getList()) {
+	//
+@}
+</code></pre>
+
+for循环也有简化版本：
+<pre><code>
+@for Computer computer : currentPage.getList()
+	//
+@
+</code></pre>
+我们有理由使用增强for循环：它使当前循环预定义了变量：
+<pre><code>
+@for String name: names 
+    Your name is: $name,
+    the total size: $_size,
+    the current item index: $_index,
+    is odd line? $_isOdd
+    is first? $_isFirst
+    is last? $_isLast
+@
+</code></pre>
+
+_size和_index是长整型的。其它是布尔型的。 
+
+h4. 格式化和一些实用性方法 
+
+您可能想知道下面代码中的format方法来自哪里。
+
+<pre><code>
+$format(computer.introduced, "dd MMM yyyy")
+</code></pre>
+
+它在Japid jar包里的一个叫WebUtils的类里。这些类包含很多便利的静态方法，以方便您在Japid脚本里直接调用。感兴趣可以阅读下它们的api文档。
+
+h4. 在Japid脚本里导入类 
+
+Japid脚本转换成Java文件，然后编译成Java类。您在Japid脚本里可以导入任何Java类，跟在Java文件里导入一样：
+<pre><code>
+@import com.mycompany.Foo
+@import com.mycompany.Utils.*
+</code></pre>
+结尾不需要分号。
+
+有些包和类已经自动为您导好了：
+<pre><code>
+import java.util.*;
+import java.io.*;
+import play.mvc.Http.Context.Implicit;
+import play.i18n.Lang;
+import play.data.Form;
+import play.data.Form.Field;
+import play.mvc.Http.Request;
+import play.mvc.Http.Response;
+import play.mvc.Http.Session;
+import play.mvc.Http.Flash;
+import play.data.validation.Validation;
+import static cn.bran.japid.util.WebUtils.*;
+import controllers.*;
+import models.*;
+</code></pre>
+
+如您所见，脚本里也内置了一些对象。  
+
+h4. 表单处理
+
+我使用另一个脚本作为示例：
+
+<pre>
+@(Long id, Form<Computer> computerForm)
+@extends main("Edit A Computer")
+    <h1>Edit computer/Japid</h1>
+    <form method="POST" action="$routes.Application.update(id)">
+        <fieldset>
+            @t myInputText(computerForm.apply("name"), "名称")
+ 			${myInputText.apply(
+				computerForm.apply("introduced"), 
+				"Introduced Date"
+				)
+			}
+            $Application.inputText(computerForm.apply("discontinued"), "Discontinued Date")
+            @t select( \
+            	computerForm.apply("company.id"), \
+                Company.options(), \
+                "Company", \
+				"- Choose a company -" \
+            )
+        </fieldset>
+        <div class="actions">
+            <input type="submit" value="Save this computer" class="btn primary"> or 
+            <a href="$routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+    </form>
+    <form method="POST" action="$routes.Application.delete(id)" class="topRight">
+    	<input type="submit" value="Delete this computer" class="btn danger">
+    </form>
+</pre>
+
+注意：
+Japid没有内置处理表单和字段的功能。我认为这些内置功能没有太大的意义。您可以轻而易举地使用模板片段或独立的模板文件提供这些功能。 
+
+Play2中的"Form"类包含了所有有关数据绑定，表单验证和格式化的功能。尽管使用Scala编写，但是完全能够在Japid中使用。
+
+一个"Form"包含了一组"Field"，每一个"Field"都有验证相关的代码注解。
+
+上面的例子中，有一个泛型是"Computer"的"Form"：
+<pre><code>
+@(Long id, Form<Computer> computerForm)
+</code></pre>
+
+当然，你可以直接传Computer对象而不用外包一个Form。但那样您就得自己验证了。 
+<pre><code>
+@(Long id, Computer computer)
+</code></pre>
+
+获取这个form的字段，您可以调用Form对象的 *apply(...)* 方法：
+<pre><code>
+  @t myInputText(computerForm.apply("name"), "Name")
+</code></pre>
+
+这里，"myInputText"是一个在 myInputText.html里定义的模板:
+
+<pre><code>
+	@import utils.Forms
+	@(Field fld, String label)
+	<div class="clearfix ${Forms.hasError(fld) ? "error" : ""}">
+    	<label for="$fld.name()">$label</label>
+    	<div class="input">
+		    <input type="text" id="$fld.name()" name="$fld.name()" value="$fld.value()"/>
+	    	<span class="help-inline">$Forms.fieldSpecs(fld)</span> 
+	    </div>
+ 	</div>
+</code></pre>
+
+Forms这个工具类在位于<code>app</code>文件夹的<code>utils</code>包里。您可以查看一下。
+
+字段的名和值可以通过name()和value()方法获取。 
+
+myImputText模板能够以两种方式调用：
+
+<pre><code>
+	@Field f = computerForm.apply("name");
+	@t myInputText(f, "名称")
+		or:
+	$myInputText.apply(f, "Name")
+</code></pre>
+
+这里，我在使用这个字段之前把它赋值给一个变量。 
+
+@t是一个更强大的语法。它能够包含一块参数化的模板文本：
+
+<pre><code>
+@t myTag(String s) | String name, int age
+	the returned value: $name, $age
+@
+</code></pre>
+
+myTag模板可能会是这样：
+<pre><code>
+@(String msg)
+do someting about it, then
+@doBody("my name", 18)
+do more about it
+</code></pre>
+
+合并起来后，输出可能是这样的：
+
+<pre><code>
+do someting about it, then
+	the returned value: my name, 18
+do more about it
+</code></pre>
+
+任何模板的*apply()*方法都是返回一块内容，这块内容被整合到当前文本流里。但是这样调用其他模板的方式没有促发回调，也就没有@t那么强大。
+
+在一个表达式里使用${}或~{}调用一个模板是允许跨行的。而@t只允许整个表单时是一行。 
+
+如果你确实喜欢使用@t并且想跨行，使用续行符号：
+<pre><code>
+@t select( \
+	computerForm.apply("company.id"), \
+	Company.options(), \
+	"Company", \
+	"- Choose a company -" \
+)
+</code></pre> 
+
+h4. 小结
+
+Java编译器比起Scala编译器来说，非常快速，几乎快10倍。 Japid让开发Play应用如坐春风。 
+
+我希望我已经解释的足够好以致于您有兴趣在您的Play项目里试用Japid。  
+
+如有反馈请联系bing.ran@gmail.com
+ 
+
+h2. Appendex
+
+h3. History
+
+
+2012.11.1
+# now referenced japid42 repo on github. There is no need to build japid locally. 
+
+2012.10.26
+
+Bing: I have ported the app to using Japid as the rendering engine. Please see the 
+
+# project/Build.scala
+# app/Global.java: to initialize the Japid and added customized error handlers 
+# app/controllers/Application.java and
+# the japidroot folder
+
+to understand the integration of Japid with Play2. 
