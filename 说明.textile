@@ -169,7 +169,7 @@ renderJapid()方法在位于"japidroot/japidviews"的文件夹中寻找japid脚�
 
 renderJapidWith()方法的第一个参数是japid脚本的文件名。在脚本名之前冠以"@"，意味着该脚本与缺省脚本位于同一文件夹中，否则我需要指定以"japidviews"开头的全路径，比如"japidviews/Application/edit.html"。 
 
-两个方法都返回Play *Result*的一个实例，然后作为一个有效对象从actions中返回。 这个对象也能被包裹在ok(),badRequest()方法中，从而达到合理添加headers的目的。
+两个方法都返回Play *Result* 的一个实例，然后作为一个有效对象从actions中返回。 这个对象也能被包裹在ok(),badRequest()方法中，从而达到合理添加headers的目的。
 
 需要非常注意的是，japid自带编译器和以Play的类加载器作为父加载器的类加载器，controllers不能直接引用japid views，而views可以引用modes和controllers。  
     
