@@ -345,7 +345,7 @@ h4. 布局
 # 一个布局可以由多个参数，就像一般的模板一样。
 # 在html代码中使用"$"获取表达式的值。可以是$expr或${expr}。后者看起来更清晰，并且允许表达式跨行。而前者简短，但是局限于一行内。
 # HTML的安全表达式通过冠以"~"或"~{}"实现。如果你不确定某个表达式的自然形式，冠以"~"替换"$"于表达式前。
-# Play2通过一个简单的调用实现反向URL查询 。因此在Japid中只是一个表达式:
+# Play2通过一个简单的调用实现反向URL查询 。因此在Japid中只是一个表达式：
 <pre><code>
 $routes.Assets.at("stylesheets/bootstrap.min.css")
 or:
@@ -586,7 +586,7 @@ Play2中的"Form"类包含了所有有关数据绑定，表单验证和格式化
   @t myInputText(computerForm.apply("name"), "Name")
 </code></pre>
 
-这里，"myInputText"是一个在 myInputText.html里定义的模板:
+这里，"myInputText"是一个在 myInputText.html里定义的模板：
 
 <pre><code>
 	@import utils.Forms
