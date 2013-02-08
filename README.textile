@@ -11,11 +11,11 @@ It demonstrates:
 - Achieving, table pagination and CRUD forms.
 - Rendering data with Japid. 
 
-japid42 is a pure java template engine specifically designed for programming Java web applications for Play 2.0x series. It's hosted at:  http://github.com/branaway/japid42
+japid42 is a pure java template engine specifically designed for programming Java web applications for Play 2.0.x and 2.1.x series. It's hosted at:  http://github.com/branaway/japid42
 It offers extremely fast script change and reloading. Roughly the default Scala based rendering engine is 10x slower in reloading a changed view. Changes in templates will never trigger an application reload.  
 
  
-To run the sample, make sure you're using play 2.0.4.
+To run the sample, make sure you're using play 2.1.0.
 
 # git clone git://github.com/branaway/computer-japid.git
 # cd computer-japid
@@ -32,15 +32,15 @@ The first thing is to declare the dependency of japid in the the build.scala:
 <pre>
 import sbt._
 import Keys._
-import PlayProject._
+import play.Project._
 object ApplicationBuild extends Build {
     val appName         = "computer-japid"
     val appVersion      = "1.0"
     val appDependencies = Seq(
       "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
-      "japid42" % "japid42_2.9.1" % "0.7"
+      "japid42" % "japid42_2.10" % "0.8"
     )
-    val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+    val main = PlayProject(appName, appVersion, appDependencies).settings(
       ebeanEnabled := false,
       resolvers += Resolver.url("Japid on Github", url("http://branaway.github.com/releases/"))(Resolver.ivyStylePatterns)
     )
@@ -680,3 +680,6 @@ Bing: I have ported the app to using Japid as the rendering engine. Please see t
 # the japidroot folder
 
 to understand the integration of Japid with Play2. 
+
+2013.2.8
+# made to use japid42 version 0.8, which was Play 2.1.0 compatible

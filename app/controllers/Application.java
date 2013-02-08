@@ -73,6 +73,7 @@ public class Application extends JapidController {
         if(computerForm.hasErrors()) {
             return badRequest(renderJapidWith("@edit.html", id, computerForm));
         }
+
         computerForm.get().update(id);
         flash("success", "Computer " + computerForm.get().name + " has been updated.");
         return GO_HOME;
