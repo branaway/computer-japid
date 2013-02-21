@@ -3,8 +3,8 @@ html {
 }
 
 header h1 {
-    padding: 0.4em 1.1em;
-    color: white;
+    padding: 0.5em 1.1em;
+    color: red;
     font-weight: normal;
     font-size: 24px;
 }
@@ -61,5 +61,3 @@ table.computers .header a {
 #pagination ul .current a {
     color: #666;
 }
-
-

@@ -1,6 +1,6 @@
 h1. A Sample Application that Demos Japid Rendering Engine with Play 2.0
 
-Bing Ran, China (bing.ran@iclass.com)
+Bing Ran(bing.ran@iclass.com)
 
 
 This is a classic CRUD application, backed by a JDBC database, rendered with Japid42 for play2. 

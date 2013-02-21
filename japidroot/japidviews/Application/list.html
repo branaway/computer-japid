@@ -1,7 +1,6 @@
 @(Computer.Page currentPage, String currentSortBy, String currentOrder, String currentFilter)
 
 @extends main("List All")
-
 *{
 	Helper generating navigation links. We also have the same method defined in the Application
 	controller to demo the flexibility. 
@@ -65,13 +64,10 @@
     </div>
     
     @if(currentPage.getTotalRowCount() == 0) {
-        
         <div class="well">
             <em>Nothing to display</em>
         </div>
-        
     @} else {
-        
         <table class="computers zebra-striped">
             <thead>
                 <tr>
@@ -82,34 +78,32 @@
                 </tr>
             </thead>
             <tbody>
-
-                @for(Computer computer : currentPage.getList()) {
-                    <tr>
-                        <td><a href="$routes.Application.edit(computer.id)">$computer.name</a></td>
-                        <td>
-                            @if(computer.introduced == null) {
-                                <em>-</em>
-                            @} else {
-                                $format(computer.introduced, "dd MMM yyyy")
-                            @}
-                        </td>
-                        <td>
-                            @if(computer.discontinued == null) {
-                                <em>-</em>
-                            @} else {
-                               	$format(computer.discontinued, "dd MMM yyyy")
-                            @}
-                        </td>
-                        <td>
-                            @if(computer.company == null) {
-                                <em>-</em>
-                            @} else {
-                                $computer.company.name
-                            @}
-                        </td>
-                    </tr>
-                @}
-
+            @for(Computer computer : currentPage.getList()) {
+                <tr>
+                    <td><a href="$routes.Application.edit(computer.id)">$computer.name</a></td>
+                    <td>
+                        @if(computer.introduced == null) {
+                            <em>-</em>
+                        @} else {
+                            $format(computer.introduced, "dd MMM yyyy")
+                        @}
+                    </td>
+                    <td>
+                        @if(computer.discontinued == null) {
+                            <em>-</em>
+                        @} else {
+                           	$format(computer.discontinued, "dd MMM yyyy")
+                        @}
+                    </td>
+                    <td>
+                        @if(computer.company == null) {
+                            <em>-</em>
+                        @} else {
+                            $computer.company.name
+                        @}
+                    </td>
+                </tr>
+            @}
             </tbody>
         </table>
 
@@ -138,8 +132,4 @@
                 @}
             </ul>
         </div>
-        
-    @}
-        
-
-            
+    @}            
