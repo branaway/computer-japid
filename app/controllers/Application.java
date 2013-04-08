@@ -139,8 +139,8 @@ public class Application extends JapidController {
 	
 		if (newSortBy != null) {
 			sortBy = newSortBy;
-			if (currentSortBy == newSortBy) {
-				if (currentOrder == "asc") {
+			if (currentSortBy.equals(newSortBy)) {
+				if ("asc".equals(currentOrder)) {
 					order = "desc";
 				} else {
 					order = "asc";
