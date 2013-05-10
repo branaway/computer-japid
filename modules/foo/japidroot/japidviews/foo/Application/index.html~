@@ -1,1 +1,4 @@
-hey japid in sub project!
+`(Calc c)
+`setHeader Server			nginx/0.8.26
+
+nice...Got you: ~c.name at $"$" + c.price, which is not bad. 

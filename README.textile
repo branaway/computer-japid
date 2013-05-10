@@ -1,4 +1,4 @@
-h1. A Sample Application that Demos Japid Rendering Engine with Play 2.0
+h1. A Sample Application that Demos Japid Rendering Engine with Play 2.1
 
 Bing Ran(bing.ran@iclass.com)
 
@@ -38,7 +38,7 @@ object ApplicationBuild extends Build {
     val appVersion      = "1.0"
     val appDependencies = Seq(
       "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
-      "japid42" % "japid42_2.10" % "0.8"
+      "japid42" % "japid42_2.10" % "0.9"
     )
     val main = PlayProject(appName, appVersion, appDependencies).settings(
       ebeanEnabled := false,
@@ -54,22 +54,19 @@ h3. Initialize Japid
 The initialization of Japid takes place in Global.java in the app folder:
 
 <pre>
-import play.Application;
-import play.GlobalSettings;
 import play.Play;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
 import play.mvc.Results;
-import cn.bran.japid.template.JapidRenderer;
 import cn.bran.play.JapidController;
 
-public class Global extends JapidRenderer {
+
+public class Global extends cn.bran.play.GlobalSettingsWithJapid {
 	@Override
 	public void onStartJapid() {
-		JapidRenderer.setTemplateRoot("japidroot", "modules/foo/japidroot");
-		// there are more customization you can do to Japid
-		// JapidRenderer.addImportStatic(StringUtils.class);
-		JapidRenderer.setLogVerbose(true);
+	    setTemplateRoot("japidroot", "modules/foo/japidroot"); // the module's japid root must be specified if you have one
+		setLogVerbose(true);
+		setKeepJavaFiles(false); // keep the Java code derived from Japid scripts in memory only
 	}
 
 	@Override
@@ -90,7 +87,7 @@ public class Global extends JapidRenderer {
 
 	@Override
 	public Result onHandlerNotFound(RequestHeader r) {
-		// usually one need to use a customized error reporting in production.
+		// usually one needs to use a customized error reporting in production.
 		//
 		if (Play.application().isProd() || Play.application().isDev())
 			return Results.notFound(JapidController.renderJapidWith("onHandlerNotFound.html", r));
@@ -683,3 +680,5 @@ to understand the integration of Japid with Play2.
 
 2013.2.8
 # made to use japid42 version 0.8, which was Play 2.1.0 compatible
+2013.5.10
+# made to use japid42 version 0.9
