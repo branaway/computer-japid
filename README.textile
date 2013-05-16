@@ -99,7 +99,7 @@ public class Global extends cn.bran.play.GlobalSettingsWithJapid {
 
 Note:
 
-# Global must inherit from JapidRenderer. 
+# Global must inherit from GlobalSettingsWithJapid. 
 There are more options that one can configure about Japid, such as the default location of Japid scripts, the interval between file change detections in dev mode and import statement that will be added to all the Japid scripts. You can do that in onStartJapid();
 # I have also over-ridden three other methods in this class to provide customized information page when 404, 500 errors are encountered in production. To test these handlers in DEV mode, please adjust the code accordingly in the if statement.
 Check out this line:
