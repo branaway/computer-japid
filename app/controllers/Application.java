@@ -75,7 +75,7 @@ public class Application extends JapidController {
         }
 
         computerForm.get().update(id);
-        flash("success", "Computer " + computerForm.get().name + " has been updated.");
+        flash("success", "Computer model " + computerForm.get().name + " has been updated.");
         return GO_HOME;
     }
     
@@ -111,7 +111,7 @@ public class Application extends JapidController {
         	return badRequest(renderJapidWith("@createForm.html", computerForm));
         }
         computerForm.get().save();
-        flash("success", "Computer " + computerForm.get().name + " has been created");
+        flash("success", "Computer " + computerForm.get().name + " has been created.");
         return GO_HOME;
     }
 
@@ -123,7 +123,7 @@ public class Application extends JapidController {
     @Transactional
     public static Result delete(Long id) {
         Computer.findById(id).delete();
-        flash("success", "Computer has been deleted");
+        flash("success", "The computer has been deleted. ");
         return GO_HOME;
     }
 

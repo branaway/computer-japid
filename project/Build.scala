@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
   //  		javaJdbc,
     		javaJpa,
     		"org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
-    		"japid42" % "japid42_2.10" % "0.9.3"
+    		"japid42" % "japid42_2.10" % "0.9.4.1"
     )
 
     val foo = play.Project("foo", "0.1", appDependencies, path = file("modules/foo")).settings(
