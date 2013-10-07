@@ -20,6 +20,7 @@ public class Application extends JapidController {
      */
     public static Result GO_HOME = redirect(
         routes.Application.list(0, "name", "desc", "")
+//    		"list?page=0;sortBy=name;order=desc"
     );
     
     /**
@@ -152,6 +153,7 @@ public class Application extends JapidController {
 	
 		return routes.Application.list(newPage, sortBy, order, currentFilter)
 				.url();
+//		return "list?page=" + newPage + ";sortBy" + sortBy + ";oder=" + order + ";filter=" + currentFilter;
 	}
 	
 	void foo() {}

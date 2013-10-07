@@ -148,6 +148,76 @@ public class Computer {
         }
         
     }
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the introduced
+	 */
+	public Date getIntroduced() {
+		return introduced;
+	}
+
+	/**
+	 * @param introduced the introduced to set
+	 */
+	public void setIntroduced(Date introduced) {
+		this.introduced = introduced;
+	}
+
+	/**
+	 * @return the discontinued
+	 */
+	public Date getDiscontinued() {
+		return discontinued;
+	}
+
+	/**
+	 * @param discontinued the discontinued to set
+	 */
+	public void setDiscontinued(Date discontinued) {
+		this.discontinued = discontinued;
+	}
+
+	/**
+	 * @return the company
+	 */
+	public Company getCompany() {
+		return company;
+	}
+
+	/**
+	 * @param company the company to set
+	 */
+	public void setCompany(Company company) {
+		this.company = company;
+	}
     
 }
 
