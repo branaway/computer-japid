@@ -2,16 +2,17 @@ import play.Play;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
 import play.mvc.Results;
+import cn.bran.japid.util.JapidFlags;
 import cn.bran.play.JapidController;
 import play.mvc.Results.Status;
 
 public class Global extends cn.bran.play.GlobalSettingsWithJapid {
 	@Override
 	public void onStartJapid() {
-	    setTemplateRoot("japidroot", "modules/foo/japidroot");
+	    setTemplateRoot("japidroot" /*, "modules/foo/japidroot"*/);
 		setLogVerbose(true);
 		setKeepJavaFiles(false); // keep the Java code derived from Japid scripts in memory only
-//		setUseJaxrs(true);
+//		JapidFlags.setLogLevelDebug();
 	}
 
 	@Override

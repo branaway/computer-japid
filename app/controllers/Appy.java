@@ -9,7 +9,7 @@ import cn.bran.play.JapidController;
 /**
  * Manage a database of computers
  */
-@Path("/app")
+@Path("/appy")
 public class Appy extends JapidController {
 	
 	@GET
@@ -17,5 +17,11 @@ public class Appy extends JapidController {
 //    	throw new RuntimeException("something is not right");
         return ok("very cool");
     }
+
+	@GET
+	public static Result index2() {
+//    	throw new RuntimeException("something is not right");
+		return ok("very cool2");
+	}
 }
             
