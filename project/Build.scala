@@ -13,7 +13,7 @@ object ApplicationBuild extends Build {
     		javaJpa,
     		cache,
     		"org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
-    		"japid42" % "japid42_2.10" % "0.9.12"
+    		"japid42" % "japid42_2.10" % "0.9.13"
     )
 
 //    val foo = play.Project("foo", "0.1", appDependencies, path = file("modules/foo")).settings(
@@ -21,7 +21,7 @@ object ApplicationBuild extends Build {
 //    )
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-    		resolvers += Resolver.url("Japid on Github", url("http://branaway.github.com/releases/"))(Resolver.ivyStylePatterns)
+    		resolvers += Resolver.url("Japid on Github", url("http://branaway.github.io/releases/"))(Resolver.ivyStylePatterns)
     		,ebeanEnabled := false
 //    		,unmanagedResourceDirectories in Compile  <+= baseDirectory( _ / "japidroot" )
 
