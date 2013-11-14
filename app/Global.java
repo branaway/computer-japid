@@ -1,7 +1,9 @@
 import play.Play;
+import play.libs.F.Promise;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
 import play.mvc.Results;
+import play.mvc.SimpleResult;
 import cn.bran.play.JapidController;
 
 public class Global extends cn.bran.play.GlobalSettingsWithJapid {
@@ -13,7 +15,7 @@ public class Global extends cn.bran.play.GlobalSettingsWithJapid {
 	}
 
 	@Override
-	public Result onError(RequestHeader h, Throwable t) {
+	public Promise<SimpleResult> onError(RequestHeader h, Throwable t) {
 		if (Play.application().isProd())
 			return Results.internalServerError(JapidController.renderJapidWith("onError.html", h, t));
 		else
